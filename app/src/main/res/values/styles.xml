@@ -1,0 +1,46 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ColorButton" >
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:onClick">selectColor</item>
+    </style>
+
+    <style name="Pixel">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:onClick">changeColor</item>
+    </style>
+
+    <style name="ColorSelectorSeekBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:max">255</item>
+    </style>
+
+    <style name="RedSeekBar"
+        parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">#ff0000</item>
+    </style>
+
+    <style name="GreenSeekBar"
+        parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">#00ff00</item>
+    </style>
+
+    <style name="BlueSeekBar"
+        parent="Widget.AppCompat.SeekBar">
+        <item name="colorAccent">#0000ff</item>
+    </style>
+</resources>
