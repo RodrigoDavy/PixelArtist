@@ -1,107 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context="rodrigodavy.com.github.pixelartist.ColorSelector">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:background="#0000">
+        android:gravity="center"
+        android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="R"
-            android:textColor="#ff0000"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:layout_margin="20dp"
+            android:background="#0000">
 
-        <SeekBar
-            android:id="@+id/seekBarRed"
-            style="@style/ColorSelectorSeekBar"
-            android:theme="@style/RedSeekBar" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="R"
+                android:textColor="#ff0000"
+                android:textSize="20sp"
+                android:textStyle="bold"/>
 
-    </LinearLayout>
+            <SeekBar
+                android:id="@+id/seekBarRed"
+                style="@style/ColorSelectorSeekBar"
+                android:theme="@style/RedSeekBar" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp">
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="G"
-            android:textColor="#00ff00"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_margin="20dp">
 
-        <SeekBar
-            android:id="@+id/seekBarGreen"
-            style="@style/ColorSelectorSeekBar"
-            android:theme="@style/GreenSeekBar" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="G"
+                android:textColor="#00ff00"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <SeekBar
+                android:id="@+id/seekBarGreen"
+                style="@style/ColorSelectorSeekBar"
+                android:theme="@style/GreenSeekBar" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp">
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="B"
-            android:textColor="#0000FF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_margin="20dp">
 
-        <SeekBar
-            android:id="@+id/seekBarBlue"
-            style="@style/ColorSelectorSeekBar"
-            android:theme="@style/BlueSeekBar" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="B"
+                android:textColor="#0000FF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-    </LinearLayout>
+            <SeekBar
+                android:id="@+id/seekBarBlue"
+                style="@style/ColorSelectorSeekBar"
+                android:theme="@style/BlueSeekBar" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/old_color"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="->"
+                android:textSize="42sp"/>
+
+            <Button
+                android:id="@+id/new_color"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+
+        </LinearLayout>
 
         <Button
-            android:id="@+id/old_color"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:text="->"
-            android:textSize="42sp"/>
-
-        <Button
-            android:id="@+id/new_color"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
-
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="@string/apply"
+            android:textSize="24sp"
+            android:onClick="apply" />
     </LinearLayout>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="@string/apply"
-        android:textSize="24dp"
-        android:onClick="apply" />
-</LinearLayout>
+</ScrollView>
