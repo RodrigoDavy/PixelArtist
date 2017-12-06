@@ -9,17 +9,16 @@
     </style>
 
     <style name="ColorButton" >
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:onClick">selectColor</item>
     </style>
 
     <style name="Pixel">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
         <item name="android:onClick">changeColor</item>
+        <item name="android:background">@color/color_1</item>
     </style>
 
     <style name="ColorSelectorSeekBar">

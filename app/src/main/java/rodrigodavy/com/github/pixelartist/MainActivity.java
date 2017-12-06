@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,9 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 Button b = (Button) findViewById(data.getIntExtra("id",0));
                 b.setBackgroundColor(data.getIntExtra("color",0));
             }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
         }
     }//onActivityResult
 
@@ -83,8 +81,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeColor(View v) {
-        Button b = (Button) v;
-
-        b.setBackground(currentColor);
+        v.setBackground(currentColor);
     }
 }
