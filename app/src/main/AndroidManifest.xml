@@ -18,7 +18,8 @@
         </activity>
         <activity
             android:name=".ColorSelector"
-            android:label="@string/color_selector">
+            android:label="@string/color_selector"
+            android:parentActivityName="rodrigodavy.com.github.pixelartist.MainActivity">
         </activity>
     </application>
 
