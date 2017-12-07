@@ -40,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
                 (Button) findViewById(R.id.color_button_14),
                 (Button) findViewById(R.id.color_button_15)};
 
-        currentColor = colorButtons[0].getBackground();
-        getSupportActionBar().setBackgroundDrawable(currentColor);
-
         for(int n=0;n<colorButtons.length;n++) {
 
             colorButtons[n].setOnLongClickListener(new View.OnLongClickListener() {
@@ -58,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        currentColor = colorButtons[0].getBackground();
+        getSupportActionBar().setBackgroundDrawable(currentColor);
     }
 
     @Override
