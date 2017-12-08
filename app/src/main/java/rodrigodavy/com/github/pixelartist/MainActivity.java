@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 (Button) findViewById(R.id.color_button_14),
                 (Button) findViewById(R.id.color_button_15)};
 
-        for(int n=0;n<colorButtons.length;n++) {
+        for(Button b: colorButtons) {
 
-            colorButtons[n].setOnLongClickListener(new View.OnLongClickListener() {
+            b.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     ColorDrawable c = (ColorDrawable) view.getBackground();
@@ -88,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.menu_fill:
                 fillScreen(currentColor);
+                return true;
+            case R.id.menu_save:
+                Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_SHORT);
+                toast.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
