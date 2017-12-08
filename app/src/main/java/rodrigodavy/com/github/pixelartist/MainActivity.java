@@ -2,16 +2,16 @@ package rodrigodavy.com.github.pixelartist;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,8 +69,43 @@ public class MainActivity extends AppCompatActivity {
                 b.setBackgroundColor(data.getIntExtra("color",0));
             }
         }
-    }//onActivityResult
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_new:
+                View v = findViewById(R.id.color_button_1);
+                fillScreen(v.getBackground());
+                return true;
+            case R.id.menu_fill:
+                fillScreen(currentColor);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void fillScreen(Drawable color) {
+        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+
+        for(int i=0;i<paper.getChildCount();i++) {
+            LinearLayout l = (LinearLayout) paper.getChildAt(i);
+
+            for(int j=0;j<l.getChildCount();j++) {
+                View pixel = l.getChildAt(j);
+                pixel.setBackground(color);
+            }
+        }
+    }
 
     public void selectColor(View v) {
         Button b = (Button) v;

@@ -2,4 +2,7 @@
     <string name="app_name">Pixel Artist</string>
     <string name="color_selector">Color Selector</string>
     <string name="apply">Apply</string>
+
+    <string name="menu_new">New drawing</string>
+    <string name="menu_fill">Fill screen with current color</string>
 </resources>
