@@ -2,16 +2,17 @@ package rodrigodavy.com.github.pixelartist;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,12 +41,9 @@ public class MainActivity extends AppCompatActivity {
                 (Button) findViewById(R.id.color_button_14),
                 (Button) findViewById(R.id.color_button_15)};
 
-        currentColor = colorButtons[0].getBackground();
-        getSupportActionBar().setBackgroundDrawable(currentColor);
+        for(Button b: colorButtons) {
 
-        for(int n=0;n<colorButtons.length;n++) {
-
-            colorButtons[n].setOnLongClickListener(new View.OnLongClickListener() {
+            b.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
                     ColorDrawable c = (ColorDrawable) view.getBackground();
@@ -58,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        currentColor = colorButtons[0].getBackground();
+        getSupportActionBar().setBackgroundDrawable(currentColor);
     }
 
     @Override
@@ -69,8 +70,47 @@ public class MainActivity extends AppCompatActivity {
                 b.setBackgroundColor(data.getIntExtra("color",0));
             }
         }
-    }//onActivityResult
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_new:
+                View v = findViewById(R.id.color_button_1);
+                fillScreen(v.getBackground());
+                return true;
+            case R.id.menu_fill:
+                fillScreen(currentColor);
+                return true;
+            case R.id.menu_save:
+                Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_SHORT);
+                toast.show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void fillScreen(Drawable color) {
+        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+
+        for(int i=0;i<paper.getChildCount();i++) {
+            LinearLayout l = (LinearLayout) paper.getChildAt(i);
+
+            for(int j=0;j<l.getChildCount();j++) {
+                View pixel = l.getChildAt(j);
+                pixel.setBackground(color);
+            }
+        }
+    }
 
     public void selectColor(View v) {
         Button b = (Button) v;

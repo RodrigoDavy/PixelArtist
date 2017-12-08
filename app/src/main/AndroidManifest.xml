@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +20,8 @@
         </activity>
         <activity
             android:name=".ColorSelector"
-            android:label="@string/color_selector">
+            android:label="@string/color_selector"
+            android:parentActivityName="rodrigodavy.com.github.pixelartist.MainActivity">
         </activity>
     </application>
 
