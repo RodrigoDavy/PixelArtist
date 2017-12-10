@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Artista de Pixel</string>
+    <string name="color_selector">Selector de Color</string>
+    <string name="apply">Aplicar</string>
+    <string name="menu_new">Nuevo</string>
+    <string name="menu_fill">Llenar con el color seleccionado</string>
+    <string name="menu_save">Guardar</string>
+    <string name="toast_save">¡Perdona, esto no está implementado! Usa la captura de pantalla :)</string>
+</resources>

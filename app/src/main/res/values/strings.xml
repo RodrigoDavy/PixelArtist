@@ -3,9 +3,9 @@
     <string name="color_selector">Color Selector</string>
     <string name="apply">Apply</string>
 
-    <string name="menu_new">New drawing</string>
-    <string name="menu_fill">Fill screen with current color</string>
-    <string name="menu_save">Saver</string>
+    <string name="menu_new">New</string>
+    <string name="menu_fill">Fill screen with selected color</string>
+    <string name="menu_save">Save</string>
 
-    <string name="toast_save">Not implemented, sorry! Use screenshot for the time being :)</string>
+    <string name="toast_save">Not implemented yet, sorry! Use the screen capture :)</string>
 </resources>
