@@ -1,9 +1,12 @@
 package rodrigodavy.com.github.pixelartist;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -82,16 +85,51 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+
         switch (item.getItemId()) {
             case R.id.menu_new:
-                View v = findViewById(R.id.color_button_1);
-                fillScreen(v.getBackground());
+                final View v = findViewById(R.id.color_button_1);
+
+                alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
+                alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                fillScreen(v.getBackground());
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
                 return true;
             case R.id.menu_fill:
-                fillScreen(currentColor);
+                alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
+                alertDialog.setMessage(getString(R.string.alert_dialog_message_fill));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                fillScreen(currentColor);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
                 return true;
             case R.id.menu_save:
-                Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_LONG);
                 toast.show();
                 return true;
             default:

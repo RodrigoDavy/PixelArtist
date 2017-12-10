@@ -8,4 +8,12 @@
     <string name="menu_save">Save</string>
 
     <string name="toast_save">Not implemented yet, sorry! Use the screen capture :)</string>
+
+    <string name="alert_dialog_title_new">New drawing</string>
+    <string name="alert_dialog_message_new">Creating a new drawing will erase the old one
+        \n\nThis operation cannot be undone!</string>
+
+    <string name="alert_dialog_title_fill">Fill drawable area </string>
+    <string name="alert_dialog_message_fill">This will fill the drawable area with the selected color
+        \n\nThis operation cannot be undone!</string>
 </resources>

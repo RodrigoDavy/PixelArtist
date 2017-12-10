@@ -7,4 +7,12 @@
     <string name="menu_fill">Preencher com a cor selecionada</string>
     <string name="menu_save">Salvar</string>
     <string name="toast_save">Desculpa, não está implementado ainda! Use a captura de tela  :)</string>
+
+    <string name="alert_dialog_title_new">Novo desenho</string>
+    <string name="alert_dialog_message_new">Criar um novo desenho fará com que o desenho atual seja apagado
+        \n\nEsta operação não pode ser desfeita!</string>
+
+    <string name="alert_dialog_title_fill">Preenchar área desenhável</string>
+    <string name="alert_dialog_message_fill">Isto preencherá toda a área desenhável com a cor selecionada
+        \n\nEsta operação não pode ser desfeita!</string>
 </resources>
