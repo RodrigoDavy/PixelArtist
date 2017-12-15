@@ -4,11 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,14 +23,16 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Drawable currentColor;
+    private int currentColor;
+    private Button colorButtons[];
+    private int colors[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button colorButtons[] = {
+        colorButtons = new Button[] {
                 (Button) findViewById(R.id.color_button_0),
                 (Button) findViewById(R.id.color_button_1),
                 (Button) findViewById(R.id.color_button_2),
@@ -42,17 +48,56 @@ public class MainActivity extends AppCompatActivity {
                 (Button) findViewById(R.id.color_button_12),
                 (Button) findViewById(R.id.color_button_13),
                 (Button) findViewById(R.id.color_button_14),
-                (Button) findViewById(R.id.color_button_15)};
+                (Button) findViewById(R.id.color_button_15)
+        };
 
-        for(Button b: colorButtons) {
+        colors = new int[] {
+                ContextCompat.getColor(this,R.color.color_0),
+                ContextCompat.getColor(this,R.color.color_1),
+                ContextCompat.getColor(this,R.color.color_2),
+                ContextCompat.getColor(this,R.color.color_3),
+                ContextCompat.getColor(this,R.color.color_4),
+                ContextCompat.getColor(this,R.color.color_5),
+                ContextCompat.getColor(this,R.color.color_6),
+                ContextCompat.getColor(this,R.color.color_7),
+                ContextCompat.getColor(this,R.color.color_8),
+                ContextCompat.getColor(this,R.color.color_9),
+                ContextCompat.getColor(this,R.color.color_10),
+                ContextCompat.getColor(this,R.color.color_11),
+                ContextCompat.getColor(this,R.color.color_12),
+                ContextCompat.getColor(this,R.color.color_13),
+                ContextCompat.getColor(this,R.color.color_14),
+                ContextCompat.getColor(this,R.color.color_15)
+        };
 
-            b.setOnLongClickListener(new View.OnLongClickListener() {
+        for(int i=0;i<colorButtons.length;i++) {
+
+            GradientDrawable cd = (GradientDrawable) colorButtons[i].getBackground();
+            cd.setColor(colors[i]);
+
+            colorButtons[i].setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
-                    ColorDrawable c = (ColorDrawable) view.getBackground();
+                    int n = 0;
+
+                    for(Button b: colorButtons) {
+                        if( view.getId() == b.getId()) {
+                            break;
+                        }
+
+                        n += 1;
+                    }
+
                     Intent i = new Intent(MainActivity.this, ColorSelector.class);
                     i.putExtra("id",view.getId());
-                    i.putExtra("color",c.getColor());
+                    i.putExtra("position",n);
+                    i.putExtra("color",colors[n]);
+
+                    if(colors[n]==currentColor) {
+                        i.putExtra("currentColor",true);
+                    } else {
+                        i.putExtra("currentColor",false);
+                    }
                     startActivityForResult(i,1);
 
                     return false;
@@ -60,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        currentColor = colorButtons[0].getBackground();
-        getSupportActionBar().setBackgroundDrawable(currentColor);
+        selectColor(colorButtons[0]);
+
+        Log.i("OnCreate","TRIGGERED");
     }
 
     @Override
@@ -70,7 +116,15 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
                 Button b = (Button) findViewById(data.getIntExtra("id",0));
-                b.setBackgroundColor(data.getIntExtra("color",0));
+                GradientDrawable gd = (GradientDrawable) b.getBackground();
+                int c = data.getIntExtra("color",0);
+                gd.setColor(c);
+
+                colors[data.getIntExtra("position",0)] = c;
+
+                if(data.getBooleanExtra("currentColor",false)) {
+                    currentColor = c;
+                }
             }
         }
     }
@@ -97,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                fillScreen(v.getBackground());
+                                fillScreen(ContextCompat.getColor(MainActivity.this,R.color.color_1));
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
@@ -137,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void fillScreen(Drawable color) {
+    private void fillScreen(int color) {
         LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
 
         for(int i=0;i<paper.getChildCount();i++) {
@@ -145,20 +199,28 @@ public class MainActivity extends AppCompatActivity {
 
             for(int j=0;j<l.getChildCount();j++) {
                 View pixel = l.getChildAt(j);
-                pixel.setBackground(color);
+
+                pixel.setBackgroundColor(color);
             }
         }
     }
 
     public void selectColor(View v) {
-        Button b = (Button) v;
+        int i = 0;
 
-        currentColor = b.getBackground();
+        for(Button b: colorButtons) {
+            if( v.getId() == b.getId()) {
+                break;
+            }
 
-        getSupportActionBar().setBackgroundDrawable(currentColor);
+            i += 1;
+        }
+
+        currentColor = colors[i];
+
+        View v2 = findViewById(R.id.palette_linear_layout);
+        v2.setBackgroundColor(currentColor);
     }
 
-    public void changeColor(View v) {
-        v.setBackground(currentColor);
-    }
+    public void changeColor(View v) { v.setBackgroundColor(currentColor); }
 }

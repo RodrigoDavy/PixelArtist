@@ -18,11 +18,15 @@ public class ColorSelector extends AppCompatActivity {
     private int blue=0;
 
     private int returnId = 0;
+    private int position = -1;
+    private boolean currentColor = false;
 
     public void apply(View v) {
         Intent returnIntent = new Intent();
+        returnIntent.putExtra("position", position);
         returnIntent.putExtra("color",Color.rgb(red,green,blue));
         returnIntent.putExtra("id",returnId);
+        returnIntent.putExtra("currentColor",currentColor);
 
         if(returnId == 0) {
             setResult(ColorSelector.RESULT_CANCELED,returnIntent);
@@ -39,7 +43,7 @@ public class ColorSelector extends AppCompatActivity {
         setContentView(R.layout.activity_color_selector);
 
         Button old_color_box = (Button) findViewById(R.id.old_color);
-        Button new_color_box = (Button) findViewById(R.id.old_color);
+        Button new_color_box = (Button) findViewById(R.id.new_color);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -48,10 +52,14 @@ public class ColorSelector extends AppCompatActivity {
             }else{
                 old_color_box.setBackgroundColor(extras.getInt("color"));
                 returnId = extras.getInt("id");
+                position = extras.getInt("position");
+                currentColor = extras.getBoolean("currentColor");
             }
         } else {
             old_color_box.setBackgroundColor(savedInstanceState.getInt("color"));
             returnId = savedInstanceState.getInt("id");
+            position = savedInstanceState.getInt("position");
+            currentColor = savedInstanceState.getBoolean("currentColor");
         }
 
         ColorDrawable cd = (ColorDrawable) old_color_box.getBackground();
