@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if(data.getBooleanExtra("currentColor",false)) {
                     currentColor = c;
+                    findViewById(R.id.palette_linear_layout).setBackgroundColor(currentColor);
                 }
             }
         }
@@ -218,8 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
         currentColor = colors[i];
 
-        View v2 = findViewById(R.id.palette_linear_layout);
-        v2.setBackgroundColor(currentColor);
+        findViewById(R.id.palette_linear_layout).setBackgroundColor(currentColor);
     }
 
     public void changeColor(View v) { v.setBackgroundColor(currentColor); }
