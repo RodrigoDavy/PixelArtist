@@ -17,12 +17,18 @@ public class ColorSelector extends AppCompatActivity {
     private int green=0;
     private int blue=0;
 
+    private int oldColor=0;
+
     private int returnId = 0;
+    private int position = -1;
+    private boolean currentColor = false;
 
     public void apply(View v) {
         Intent returnIntent = new Intent();
+        returnIntent.putExtra("position", position);
         returnIntent.putExtra("color",Color.rgb(red,green,blue));
         returnIntent.putExtra("id",returnId);
+        returnIntent.putExtra("currentColor",currentColor);
 
         if(returnId == 0) {
             setResult(ColorSelector.RESULT_CANCELED,returnIntent);
@@ -34,33 +40,56 @@ public class ColorSelector extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        savedInstanceState.putInt("id", returnId);
+        savedInstanceState.putInt("color", oldColor);
+        savedInstanceState.putInt("position", position);
+        savedInstanceState.putBoolean("currentColor", currentColor);
+
+        savedInstanceState.putInt("red", red);
+        savedInstanceState.putInt("green", green);
+        savedInstanceState.putInt("blue", blue);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_color_selector);
 
         Button old_color_box = (Button) findViewById(R.id.old_color);
-        Button new_color_box = (Button) findViewById(R.id.old_color);
+        Button new_color_box = (Button) findViewById(R.id.new_color);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
                 old_color_box.setBackgroundColor(Color.rgb(red,green,blue));
             }else{
-                old_color_box.setBackgroundColor(extras.getInt("color"));
+                oldColor = extras.getInt("color");
                 returnId = extras.getInt("id");
+                position = extras.getInt("position");
+                currentColor = extras.getBoolean("currentColor");
+
+                red = Color.red(oldColor);
+                green = Color.green(oldColor);
+                blue = Color.blue(oldColor);
             }
         } else {
-            old_color_box.setBackgroundColor(savedInstanceState.getInt("color"));
+            oldColor = savedInstanceState.getInt("color");
             returnId = savedInstanceState.getInt("id");
+            position = savedInstanceState.getInt("position");
+            currentColor = savedInstanceState.getBoolean("currentColor");
+
+            red = savedInstanceState.getInt("red");
+            green = savedInstanceState.getInt("green");
+            blue = savedInstanceState.getInt("blue");
         }
 
-        ColorDrawable cd = (ColorDrawable) old_color_box.getBackground();
-        int color = cd.getColor();
-        red = Color.red(color);
-        green = Color.green(color);
-        blue = Color.blue(color);
+        old_color_box.setBackgroundColor(oldColor);
 
-        new_color_box.setBackground(old_color_box.getBackground());
+        new_color_box.setBackgroundColor(Color.rgb(red,green,blue));
 
         SeekBar seekBars[] = {
                 findViewById(R.id.seekBarRed),

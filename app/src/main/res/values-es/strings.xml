@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Artista de Pixel</string>
+    <string name="color_selector">Selector de Color</string>
+    <string name="apply">Aplicar</string>
+    <string name="menu_new">Nuevo</string>
+    <string name="menu_fill">Llenar con el color seleccionado</string>
+    <string name="menu_save">Guardar</string>
+    <string name="toast_save">¡Perdona, esto no está implementado! Usa la captura de pantalla :)</string>
+
+    <string name="alert_dialog_title_new">Nuevo dibujo</string>
+    <string name="alert_dialog_message_new">Crear un nuevo dibujo hará con que el dibujo actual se borre
+        \n\n¡Esta operación no puede ser deshecha!</string>
+
+    <string name="alert_dialog_title_fill">Llenar área dibujable</string>
+    <string name="alert_dialog_message_fill">Esto llenará toda la área dibujable con el color seleccionado
+        \n\n¡Esta operación no puede ser deshecha!</string>
+</resources>
