@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -183,12 +184,37 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.show();
 
                 return true;
+            case R.id.menu_grid:
+                pixelGrid();
+                return true;
             case R.id.menu_save:
                 Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_LONG);
                 toast.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void pixelGrid() {
+        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+
+        for(int i=0;i<paper.getChildCount();i++) {
+            LinearLayout l = (LinearLayout) paper.getChildAt(i);
+
+            for(int j=0;j<l.getChildCount();j++) {
+                View pixel = l.getChildAt(j);
+
+                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) pixel.getLayoutParams();
+
+                if(layoutParams.leftMargin>0) {
+                    layoutParams.setMargins(0,0,0,0);
+                } else {
+                    layoutParams.setMargins(1,1,0,0);
+                }
+
+                pixel.setLayoutParams(layoutParams);
+            }
         }
     }
 

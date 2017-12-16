@@ -5,6 +5,7 @@
     <string name="apply">Aplicar</string>
     <string name="menu_new">Nuevo</string>
     <string name="menu_fill">Llenar con el color seleccionado</string>
+    <string name="menu_grid">Mostrar/Ocultar cuadra de pixels</string>
     <string name="menu_save">Guardar</string>
     <string name="toast_save">¡Perdona, esto no está implementado! Usa la captura de pantalla :)</string>
 
