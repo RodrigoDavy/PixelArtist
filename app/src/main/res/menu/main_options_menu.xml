@@ -10,6 +10,10 @@
         android:icon="@drawable/menu_fill"
         android:title="@string/menu_fill"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_grid"
+        android:icon="@drawable/menu_grid"
+        android:title="@string/menu_grid"
+        app:showAsAction="ifRoom" />
     <item android:id="@+id/menu_save"
         android:icon="@drawable/menu_save"
         android:title="@string/menu_save"
