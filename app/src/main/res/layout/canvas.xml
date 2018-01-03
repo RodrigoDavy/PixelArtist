@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/palette_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:context="rodrigodavy.com.github.pixelartist.MainActivity">
+
+    <Button
+        android:id="@+id/color_button_0"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_1"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_2"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_3"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_4"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_5"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_6"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_7"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_8"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_9"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_10"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_11"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_12"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_13"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_14"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+
+    <Button
+        android:id="@+id/color_button_15"
+        style="@style/ColorButton"
+        android:background="@drawable/palette_circle" />
+</LinearLayout>
