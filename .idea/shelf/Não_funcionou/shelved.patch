@@ -1,0 +1,122 @@
+Index: app/src/main/java/rodrigodavy/com/github/pixelartist/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package rodrigodavy.com.github.pixelartist;\n\nimport android.app.Activity;\nimport android.content.Intent;\nimport android.graphics.Color;\nimport android.graphics.drawable.ColorDrawable;\nimport android.graphics.drawable.Drawable;\nimport android.support.v4.content.ContextCompat;\nimport android.support.v7.app.AppCompatActivity;\nimport android.os.Bundle;\nimport android.view.View;\nimport android.widget.Button;\nimport android.widget.RelativeLayout;\nimport android.widget.TextView;\n\npublic class MainActivity extends AppCompatActivity {\n\n    private Drawable currentColor;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_main);\n\n        Button colorButtons[] = {\n                (Button) findViewById(R.id.color_button_0),\n                (Button) findViewById(R.id.color_button_1),\n                (Button) findViewById(R.id.color_button_2),\n                (Button) findViewById(R.id.color_button_3),\n                (Button) findViewById(R.id.color_button_4),\n                (Button) findViewById(R.id.color_button_5),\n                (Button) findViewById(R.id.color_button_6),\n                (Button) findViewById(R.id.color_button_7),\n                (Button) findViewById(R.id.color_button_8),\n                (Button) findViewById(R.id.color_button_9),\n                (Button) findViewById(R.id.color_button_10),\n                (Button) findViewById(R.id.color_button_11),\n                (Button) findViewById(R.id.color_button_12),\n                (Button) findViewById(R.id.color_button_13),\n                (Button) findViewById(R.id.color_button_14),\n                (Button) findViewById(R.id.color_button_15)};\n\n        currentColor = colorButtons[0].getBackground();\n        getSupportActionBar().setBackgroundDrawable(currentColor);\n\n        for(int n=0;n<colorButtons.length;n++) {\n\n            colorButtons[n].setOnLongClickListener(new View.OnLongClickListener() {\n                @Override\n                public boolean onLongClick(View view) {\n                    ColorDrawable c = (ColorDrawable) view.getBackground();\n                    Intent i = new Intent(MainActivity.this, ColorSelector.class);\n                    i.putExtra(\"id\",view.getId());\n                    i.putExtra(\"color\",c.getColor());\n                    startActivityForResult(i,1);\n\n                    return false;\n                }\n            });\n        }\n    }\n\n    @Override\n    protected void onActivityResult(int requestCode, int resultCode, Intent data) {\n\n        if (requestCode == 1) {\n            if(resultCode == Activity.RESULT_OK){\n                Button b = (Button) findViewById(data.getIntExtra(\"id\",0));\n                b.setBackgroundColor(data.getIntExtra(\"color\",0));\n            }\n        }\n    }//onActivityResult\n\n\n    public void selectColor(View v) {\n        Button b = (Button) v;\n\n        currentColor = b.getBackground();\n\n        getSupportActionBar().setBackgroundDrawable(currentColor);\n    }\n\n    public void changeColor(View v) {\n        v.setBackground(currentColor);\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/rodrigodavy/com/github/pixelartist/MainActivity.java	(revision 2f728b440211728c84bf93414227863b0bb77595)
++++ app/src/main/java/rodrigodavy/com/github/pixelartist/MainActivity.java	(revision )
+@@ -16,12 +16,17 @@
+ public class MainActivity extends AppCompatActivity {
+ 
+     private Drawable currentColor;
++    private Drawable palette[] = new Drawable[16];
++    private Drawable pixels[];
+ 
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+         setContentView(R.layout.activity_main);
+ 
++        initializePalette();
++        initializePixels(16*16);
++
+         Button colorButtons[] = {
+                 (Button) findViewById(R.id.color_button_0),
+                 (Button) findViewById(R.id.color_button_1),
+@@ -83,4 +88,31 @@
+     public void changeColor(View v) {
+         v.setBackground(currentColor);
+     }
++
++    private void initializePalette() {
++        palette[0] = new ColorDrawable(getResources().getColor(R.color.color_0));
++        palette[1] = new ColorDrawable(getResources().getColor(R.color.color_1));
++        palette[2] = new ColorDrawable(getResources().getColor(R.color.color_2));
++        palette[3] = new ColorDrawable(getResources().getColor(R.color.color_3));
++        palette[4] = new ColorDrawable(getResources().getColor(R.color.color_4));
++        palette[5] = new ColorDrawable(getResources().getColor(R.color.color_5));
++        palette[6] = new ColorDrawable(getResources().getColor(R.color.color_6));
++        palette[7] = new ColorDrawable(getResources().getColor(R.color.color_7));
++        palette[8] = new ColorDrawable(getResources().getColor(R.color.color_8));
++        palette[9] = new ColorDrawable(getResources().getColor(R.color.color_9));
++        palette[10] = new ColorDrawable(getResources().getColor(R.color.color_10));
++        palette[11] = new ColorDrawable(getResources().getColor(R.color.color_11));
++        palette[12] = new ColorDrawable(getResources().getColor(R.color.color_12));
++        palette[13] = new ColorDrawable(getResources().getColor(R.color.color_13));
++        palette[14] = new ColorDrawable(getResources().getColor(R.color.color_14));
++        palette[15] = new ColorDrawable(getResources().getColor(R.color.color_15));
++    }
++
++    private void initializePixels(int dimension) {
++        pixels = new Drawable[dimension];
++
++        for(int i=0;i<dimension;i++) {
++            pixels[i] = palette[1];
++        }
++    }
+ }
+Index: app/src/main/res/values/styles.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\n\n    <!-- Base application theme. -->\n    <style name=\"AppTheme\" parent=\"Theme.AppCompat.Light.DarkActionBar\">\n        <!-- Customize your theme here. -->\n        <item name=\"colorPrimary\">@color/colorPrimary</item>\n        <item name=\"colorPrimaryDark\">@color/colorPrimaryDark</item>\n        <item name=\"colorAccent\">@color/colorAccent</item>\n    </style>\n\n    <style name=\"ColorButton\" >\n        <item name=\"android:layout_width\">48dp</item>\n        <item name=\"android:layout_height\">48dp</item>\n        <item name=\"android:onClick\">selectColor</item>\n    </style>\n\n    <style name=\"Pixel\">\n        <item name=\"android:layout_width\">48dp</item>\n        <item name=\"android:layout_height\">48dp</item>\n        <item name=\"android:onClick\">changeColor</item>\n        <item name=\"android:background\">@color/color_1</item>\n    </style>\n\n    <style name=\"ColorSelectorSeekBar\">\n        <item name=\"android:layout_width\">match_parent</item>\n        <item name=\"android:layout_height\">wrap_content</item>\n        <item name=\"android:layout_margin\">20dp</item>\n        <item name=\"android:max\">255</item>\n    </style>\n\n    <style name=\"RedSeekBar\"\n        parent=\"Widget.AppCompat.SeekBar\">\n        <item name=\"colorAccent\">#ff0000</item>\n    </style>\n\n    <style name=\"GreenSeekBar\"\n        parent=\"Widget.AppCompat.SeekBar\">\n        <item name=\"colorAccent\">#00ff00</item>\n    </style>\n\n    <style name=\"BlueSeekBar\"\n        parent=\"Widget.AppCompat.SeekBar\">\n        <item name=\"colorAccent\">#0000ff</item>\n    </style>\n</resources>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/styles.xml	(revision 2f728b440211728c84bf93414227863b0bb77595)
++++ app/src/main/res/values/styles.xml	(revision )
+@@ -21,6 +21,11 @@
+         <item name="android:background">@color/color_1</item>
+     </style>
+ 
++    <style name="Pixel_grid">
++        <item name="android:layout_width">48dp</item>
++        <item name="android:layout_height">48dp</item>
++    </style>
++
+     <style name="ColorSelectorSeekBar">
+         <item name="android:layout_width">match_parent</item>
+         <item name="android:layout_height">wrap_content</item>
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    package=\"rodrigodavy.com.github.pixelartist\">\n\n    <application\n        android:allowBackup=\"true\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/AppTheme\" >\n        <activity android:name=\".MainActivity\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n        <activity\n            android:name=\".ColorSelector\"\n            android:label=\"@string/color_selector\">\n        </activity>\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 2f728b440211728c84bf93414227863b0bb77595)
++++ app/src/main/AndroidManifest.xml	(revision )
+@@ -8,7 +8,7 @@
+         android:label="@string/app_name"
+         android:roundIcon="@mipmap/ic_launcher_round"
+         android:supportsRtl="true"
+-        android:theme="@style/AppTheme" >
++        android:theme="@style/AppTheme">
+         <activity android:name=".MainActivity">
+             <intent-filter>
+                 <action android:name="android.intent.action.MAIN" />
+@@ -18,8 +18,7 @@
+         </activity>
+         <activity
+             android:name=".ColorSelector"
+-            android:label="@string/color_selector">
+-        </activity>
++            android:label="@string/color_selector"></activity>
+     </application>
+ 
+ </manifest>
+\ No newline at end of file
+Index: app/src/main/java/rodrigodavy/com/github/pixelartist/Test.java
+===================================================================
+--- app/src/main/java/rodrigodavy/com/github/pixelartist/Test.java	(revision 2f728b440211728c84bf93414227863b0bb77595)
++++ app/src/main/java/rodrigodavy/com/github/pixelartist/Test.java	(revision 2f728b440211728c84bf93414227863b0bb77595)
+@@ -1,8 +0,0 @@
+-package rodrigodavy.com.github.pixelartist;
+-
+-/**
+- * Created by rodrigo on 06/12/17.
+- */
+-
+-public class Test {
+-}
