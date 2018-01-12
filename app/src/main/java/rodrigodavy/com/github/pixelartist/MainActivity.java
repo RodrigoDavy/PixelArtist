@@ -3,13 +3,18 @@ package rodrigodavy.com.github.pixelartist;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,7 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,13 +40,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        /*
-        //Hides ActionBar to free some precious screen space
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }*/
 
         initPalette();
         initPixels();
@@ -77,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_new:
                 final View v = findViewById(R.id.color_button_1);
 
+
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
                 alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
@@ -93,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
-
                 return true;
             case R.id.menu_fill:
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
@@ -120,10 +124,61 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_save:
                 Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_LONG);
                 toast.show();
+                screenShot(findViewById(R.id.paper_linear_layout));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void screenShot(View view) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        if(!isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(),"External Storage is not writable");
+        }
+
+        File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File imageFile = new File(imageFolder,"teste.jpg");
+
+        FileOutputStream outputStream = null;
+
+        if(!imageFile.exists()) {
+            Log.e(MainActivity.class.getName(),"File was not created");
+        }
+
+        try {
+            outputStream = new FileOutputStream(imageFile);
+            int quality = 100;
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            openScreenshot(imageFile);
+        } catch (FileNotFoundException e) {
+            Log.e(MainActivity.class.getName(),"File not found");
+        } catch (IOException e) {
+        Log.e(MainActivity.class.getName(),"IOException related to generating bitmap file");
+        }
+    }
+
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
+    }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
     }
 
     private void initPalette() {
