@@ -17,4 +17,7 @@
     <string name="alert_dialog_title_fill">Fill drawable area </string>
     <string name="alert_dialog_message_fill">This will fill the drawable area with the selected color
         \n\nThis operation cannot be undone!</string>
+    <string name="menu_export">Export</string>
+    <string name="toast_saved">File saved!</string>
+    <string name="toast_not_saved">File could not be saved...</string>
 </resources>

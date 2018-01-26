@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -28,6 +27,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -122,16 +122,55 @@ public class MainActivity extends AppCompatActivity {
                 pixelGrid();
                 return true;
             case R.id.menu_save:
-                Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_LONG);
-                toast.show();
-                screenShot(findViewById(R.id.paper_linear_layout));
+                saveFile("teste.txt");
+                return true;
+            case R.id.menu_export:
+                screenShot(findViewById(R.id.paper_linear_layout),"teste.jpg");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    public void screenShot(View view) {
+    public void saveFile(String fileName) {
+        if(!isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(),"External Storage is not writable");
+        }
+
+        File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File saveFile = new File(imageFolder,fileName);
+
+        try {
+            if(!saveFile.exists()) {
+                saveFile.createNewFile();
+            }
+
+            FileWriter fileWriter = new FileWriter(saveFile);
+            fileWriter.append("16 ");
+            fileWriter.append("16 \n");
+
+            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+            for(int i=0;i<16;i++) {
+                for(int j=0;j<16;j++) {
+                    View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
+                    int color = ((ColorDrawable) v.getBackground()).getColor();
+                    fileWriter.append(Integer.toHexString(color) + " ");
+                }
+                fileWriter.append("\n");
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+            Toast toast = Toast.makeText(this, R.string.toast_saved,Toast.LENGTH_LONG);
+            toast.show();
+        } catch (IOException e) {
+            Log.e("saveFile","File not found");
+            Toast toast = Toast.makeText(this, R.string.toast_not_saved,Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+    public void screenShot(View view,String fileName) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
                 view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -142,15 +181,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imageFile = new File(imageFolder,"teste.jpg");
+        File imageFile = new File(imageFolder,fileName);
 
         FileOutputStream outputStream = null;
 
-        if(!imageFile.exists()) {
-            Log.e(MainActivity.class.getName(),"File was not created");
-        }
-
         try {
+
+            if(!imageFile.exists()) {
+                imageFile.createNewFile();
+            }
+
             outputStream = new FileOutputStream(imageFile);
             int quality = 100;
             bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
