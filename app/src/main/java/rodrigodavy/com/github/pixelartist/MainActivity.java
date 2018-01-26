@@ -154,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 for(int j=0;j<16;j++) {
                     View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
                     int color = ((ColorDrawable) v.getBackground()).getColor();
-                    fileWriter.append(Integer.toHexString(color) + " ");
+                    fileWriter.append(Integer.toHexString(color));
+                    fileWriter.append(" ");
                 }
                 fileWriter.append("\n");
             }
