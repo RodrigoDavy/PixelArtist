@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                Button b = (Button) findViewById(data.getIntExtra("id",0));
+                Button b = findViewById(data.getIntExtra("id",0));
                 GradientDrawable gd = (GradientDrawable) b.getBackground();
                 int c = data.getIntExtra("color",0);
                 gd.setColor(c);
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File imageFile = new File(imageFolder,fileName);
 
-        FileOutputStream outputStream = null;
+        FileOutputStream outputStream;
 
         try {
 
@@ -215,30 +215,27 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        if (Environment.MEDIA_MOUNTED.equals(state)) {
-            return true;
-        }
-        return false;
+        return Environment.MEDIA_MOUNTED.equals(state);
     }
 
     private void initPalette() {
         colorButtons = new Button[] {
-                (Button) findViewById(R.id.color_button_0),
-                (Button) findViewById(R.id.color_button_1),
-                (Button) findViewById(R.id.color_button_2),
-                (Button) findViewById(R.id.color_button_3),
-                (Button) findViewById(R.id.color_button_4),
-                (Button) findViewById(R.id.color_button_5),
-                (Button) findViewById(R.id.color_button_6),
-                (Button) findViewById(R.id.color_button_7),
-                (Button) findViewById(R.id.color_button_8),
-                (Button) findViewById(R.id.color_button_9),
-                (Button) findViewById(R.id.color_button_10),
-                (Button) findViewById(R.id.color_button_11),
-                (Button) findViewById(R.id.color_button_12),
-                (Button) findViewById(R.id.color_button_13),
-                (Button) findViewById(R.id.color_button_14),
-                (Button) findViewById(R.id.color_button_15)
+                findViewById(R.id.color_button_0),
+                findViewById(R.id.color_button_1),
+                findViewById(R.id.color_button_2),
+                findViewById(R.id.color_button_3),
+                findViewById(R.id.color_button_4),
+                findViewById(R.id.color_button_5),
+                findViewById(R.id.color_button_6),
+                findViewById(R.id.color_button_7),
+                findViewById(R.id.color_button_8),
+                findViewById(R.id.color_button_9),
+                findViewById(R.id.color_button_10),
+                findViewById(R.id.color_button_11),
+                findViewById(R.id.color_button_12),
+                findViewById(R.id.color_button_13),
+                findViewById(R.id.color_button_14),
+                findViewById(R.id.color_button_15)
         };
 
         colors = new int[] {
@@ -300,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Initializes the "pixels" (basically sets OnLongClickListerner on them)
     private void initPixels() {
-        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
         for(int i=0;i<paper.getChildCount();i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
@@ -322,7 +319,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Shows or hides the pixels boundaries from the paper_linear_layout
     private void pixelGrid() {
-        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
         for(int i=0;i<paper.getChildCount();i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
@@ -345,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Fills paper_linear_layout with chosen color
     private void fillScreen(int color) {
-        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
         for(int i=0;i<paper.getChildCount();i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
