@@ -23,9 +23,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -120,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_grid:
                 pixelGrid();
                 return true;
+            case R.id.menu_open:
+                openFile("teste.txt");
+                return true;
             case R.id.menu_save:
                 saveFile("teste.txt");
                 return true;
@@ -128,6 +133,59 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void openFile(String fileName) {
+        File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File openFile = new File(imageFolder,fileName);
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(openFile));
+            int color;
+            String value;
+
+            int x,y;
+
+            if((value = bufferedReader.readLine()) != null) {
+                x = Integer.valueOf(value);
+            }else{
+                throw new IOException();
+            }
+
+            if((value = bufferedReader.readLine()) != null) {
+                y = Integer.valueOf(value);
+            }else{
+                throw new IOException();
+            }
+
+            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+
+            for(int i=0;i<x;i++) {
+                for(int j=0;j<y;j++) {
+
+                    if((value = bufferedReader.readLine()) != null) {
+                        color = Integer.valueOf(value);
+                    }else{
+                        throw new IOException();
+                    }
+
+                    View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
+                    v.setBackgroundColor(color);
+                }
+            }
+
+            Toast toast = Toast.makeText(this, R.string.file_opened,Toast.LENGTH_LONG);
+            toast.show();
+
+        } catch (FileNotFoundException e) {
+            Log.e("MainActivity.openFile","File not found");
+            Toast toast = Toast.makeText(this, R.string.file_not_found,Toast.LENGTH_LONG);
+            toast.show();
+        } catch (IOException e) {
+            Log.e("MainActivity.openFile","Could not openn file");
+            Toast toast = Toast.makeText(this, R.string.could_not_open,Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 
@@ -145,18 +203,16 @@ public class MainActivity extends AppCompatActivity {
             }
 
             FileWriter fileWriter = new FileWriter(saveFile);
-            fileWriter.append("16 ");
-            fileWriter.append("16 \n");
+            fileWriter.append("16\n16\n");
 
             LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
             for(int i=0;i<16;i++) {
                 for(int j=0;j<16;j++) {
                     View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
                     int color = ((ColorDrawable) v.getBackground()).getColor();
-                    fileWriter.append(Integer.toHexString(color));
-                    fileWriter.append(" ");
+                    fileWriter.append(String.valueOf(color));
+                    fileWriter.append("\n");
                 }
-                fileWriter.append("\n");
             }
             fileWriter.flush();
             fileWriter.close();
@@ -164,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, R.string.toast_saved,Toast.LENGTH_LONG);
             toast.show();
         } catch (IOException e) {
-            Log.e("saveFile","File not found");
+            Log.e("MainActivity.saveFile","File not found");
             Toast toast = Toast.makeText(this, R.string.toast_not_saved,Toast.LENGTH_LONG);
             toast.show();
         }

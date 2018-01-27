@@ -19,6 +19,9 @@
         \n\nThis operation cannot be undone!</string>
     <string name="menu_export">Export</string>
     <string name="toast_saved">File saved!</string>
-    <string name="toast_not_saved">File could not be saved...</string>
+    <string name="toast_not_saved">File could not be saved</string>
     <string name="menu_open">Open</string>
+    <string name="file_not_found">File not found</string>
+    <string name="could_not_open">Error! Could not open file</string>
+    <string name="file_opened">File opened successfully</string>
 </resources>
