@@ -20,4 +20,5 @@
     <string name="menu_export">Export</string>
     <string name="toast_saved">File saved!</string>
     <string name="toast_not_saved">File could not be saved...</string>
+    <string name="menu_open">Open</string>
 </resources>
