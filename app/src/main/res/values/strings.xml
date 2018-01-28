@@ -24,4 +24,5 @@
     <string name="file_not_found">File not found</string>
     <string name="could_not_open">Error! Could not open file</string>
     <string name="file_opened">File opened successfully</string>
+    <string name="filename">Filename</string>
 </resources>

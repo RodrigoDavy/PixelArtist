@@ -14,12 +14,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -76,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        LayoutInflater layoutInflater = this.getLayoutInflater();
 
         switch (item.getItemId()) {
             case R.id.menu_new:
@@ -123,13 +126,81 @@ public class MainActivity extends AppCompatActivity {
                 pixelGrid();
                 return true;
             case R.id.menu_open:
-                openFile("teste.txt");
+                alertDialog.setTitle(getString(R.string.menu_open));
+                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
+
+                                String filename;
+                                if (editText != null) {
+                                    filename = editText.getText() + ".pixel_artist";
+                                    openFile(filename);
+                                }
+
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
                 return true;
             case R.id.menu_save:
-                saveFile("teste.txt");
+                alertDialog.setTitle(getString(R.string.menu_save));
+                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
+                                String filename = null;
+                                if (editText != null) {
+                                    filename = editText.getText() + ".pixel_artist";
+                                }
+
+                                saveFile(filename);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
                 return true;
             case R.id.menu_export:
-                screenShot(findViewById(R.id.paper_linear_layout),"teste.jpg");
+                alertDialog.setTitle(getString(R.string.menu_export));
+                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
+                                String filename = null;
+                                if (editText != null) {
+                                    filename = editText.getText() + ".pixel_artist";
+                                }
+
+                                screenShot(findViewById(R.id.paper_linear_layout),filename);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -226,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void screenShot(View view,String fileName) {
+    public void screenShot(View view,String filename) {
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
                 view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -237,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imageFile = new File(imageFolder,fileName);
+        File imageFile = new File(imageFolder,filename);
 
         FileOutputStream outputStream;
 
