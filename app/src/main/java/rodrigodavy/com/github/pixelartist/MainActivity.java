@@ -20,9 +20,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -32,6 +36,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -126,30 +132,37 @@ public class MainActivity extends AppCompatActivity {
                 pixelGrid();
                 return true;
             case R.id.menu_open:
-                alertDialog.setTitle(getString(R.string.menu_open));
-                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
 
-                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
+                File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                if (path != null) {
+                    File[] files = path.listFiles();
 
-                                String filename;
-                                if (editText != null) {
-                                    filename = editText.getText() + ".pixel_artist";
-                                    openFile(filename);
-                                }
+                    List<CharSequence> list = new ArrayList<>();
 
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.menu_open);
+
+                    for(File file:files) {
+                        if(file.getName().contains(".pixel_artist")) {
+                            list.add(0,file.getName().replace(".pixel_artist",""));
+                        }
+                    }
+
+                    final CharSequence[] charSequences = list.toArray(new CharSequence[list.size()]);
+
+                    builder.setItems(charSequences, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            openFile(charSequences[i].toString() + ".pixel_artist");
+                            alertDialog.dismiss();
+                        }
+                    });
+                    builder.show();
+                }else{
+                    Toast toast = Toast.makeText(this, R.string.no_files_found,Toast.LENGTH_LONG);
+                    toast.show();
+                }
+
                 return true;
             case R.id.menu_save:
                 alertDialog.setTitle(getString(R.string.menu_save));
@@ -246,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Toast toast = Toast.makeText(this, R.string.file_opened,Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, R.string.file_opened,Toast.LENGTH_SHORT);
             toast.show();
 
         } catch (FileNotFoundException e) {
@@ -254,7 +267,7 @@ public class MainActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, R.string.file_not_found,Toast.LENGTH_LONG);
             toast.show();
         } catch (IOException e) {
-            Log.e("MainActivity.openFile","Could not openn file");
+            Log.e("MainActivity.openFile","Could not open file");
             Toast toast = Toast.makeText(this, R.string.could_not_open,Toast.LENGTH_LONG);
             toast.show();
         }
@@ -288,7 +301,7 @@ public class MainActivity extends AppCompatActivity {
             fileWriter.flush();
             fileWriter.close();
 
-            Toast toast = Toast.makeText(this, R.string.toast_saved,Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, R.string.toast_saved,Toast.LENGTH_SHORT);
             toast.show();
         } catch (IOException e) {
             Log.e("MainActivity.saveFile","File not found");

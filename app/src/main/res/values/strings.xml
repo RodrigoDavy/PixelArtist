@@ -25,4 +25,5 @@
     <string name="could_not_open">Error! Could not open file</string>
     <string name="file_opened">File opened successfully</string>
     <string name="filename">Filename</string>
+    <string name="no_files_found">No files found</string>
 </resources>
