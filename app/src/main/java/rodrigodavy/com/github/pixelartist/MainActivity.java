@@ -20,13 +20,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -134,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_open:
 
                 File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-                if (path != null) {
+                if ((path != null) && (path.listFiles().length>0)) {
                     File[] files = path.listFiles();
 
                     List<CharSequence> list = new ArrayList<>();
@@ -201,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                                 EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
                                 String filename = null;
                                 if (editText != null) {
-                                    filename = editText.getText() + ".pixel_artist";
+                                    filename = editText.getText() + ".jpg";
                                 }
 
                                 screenShot(findViewById(R.id.paper_linear_layout),filename);
@@ -320,28 +316,40 @@ public class MainActivity extends AppCompatActivity {
             Log.e(MainActivity.class.getName(),"External Storage is not writable");
         }
 
-        File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imageFile = new File(imageFolder,filename);
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),getString(R.string.app_name));
 
-        FileOutputStream outputStream;
+        boolean success = true;
 
-        try {
+        if (!imageFolder.exists()) {
+            success = imageFolder.mkdirs();
+        }
 
-            if(!imageFile.exists()) {
-                imageFile.createNewFile();
+        if(success) {
+            File imageFile = new File(imageFolder, filename);
+
+            FileOutputStream outputStream;
+
+            try {
+
+                if (!imageFile.exists()) {
+                    imageFile.createNewFile();
+                }
+
+                outputStream = new FileOutputStream(imageFile);
+                int quality = 100;
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+
+                openScreenshot(imageFile);
+            } catch (FileNotFoundException e) {
+                Log.e(MainActivity.class.getName(), "File not found");
+            } catch (IOException e) {
+                Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
             }
-
-            outputStream = new FileOutputStream(imageFile);
-            int quality = 100;
-            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
-            outputStream.flush();
-            outputStream.close();
-
-            openScreenshot(imageFile);
-        } catch (FileNotFoundException e) {
-            Log.e(MainActivity.class.getName(),"File not found");
-        } catch (IOException e) {
-        Log.e(MainActivity.class.getName(),"IOException related to generating bitmap file");
+        }else{
+            Toast toast = Toast.makeText(this, R.string.toast_could_not_create_app_folder,Toast.LENGTH_LONG);
+            toast.show();
         }
     }
 
