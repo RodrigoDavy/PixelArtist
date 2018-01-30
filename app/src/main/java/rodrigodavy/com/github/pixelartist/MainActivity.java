@@ -190,10 +190,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_export:
                 String filename;
 
+                Calendar calendar = Calendar.getInstance();
+
                 long unixTime = System.currentTimeMillis() / 1000;
                 unixTime %= 1000000;
 
-                Calendar calendar = Calendar.getInstance();
                 filename = "IMG_" + calendar.get(Calendar.YEAR) +
                         calendar.get(Calendar.MONTH) + calendar.get(Calendar.DAY_OF_MONTH) +
                         "_" + unixTime + ".jpg";
