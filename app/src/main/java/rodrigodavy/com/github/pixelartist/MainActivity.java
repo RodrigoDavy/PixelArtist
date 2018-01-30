@@ -33,6 +33,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -187,29 +188,17 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
             case R.id.menu_export:
-                alertDialog.setTitle(getString(R.string.menu_export));
-                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
+                String filename;
 
-                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
-                                String filename = null;
-                                if (editText != null) {
-                                    filename = editText.getText() + ".jpg";
-                                }
+                long unixTime = System.currentTimeMillis() / 1000;
+                unixTime %= 1000000;
 
-                                screenShot(findViewById(R.id.paper_linear_layout),filename);
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
+                Calendar calendar = Calendar.getInstance();
+                filename = "IMG_" + calendar.get(Calendar.YEAR) +
+                        calendar.get(Calendar.MONTH) + calendar.get(Calendar.DAY_OF_MONTH) +
+                        "_" + unixTime + ".jpg";
+
+                screenShot(findViewById(R.id.paper_linear_layout),filename);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
