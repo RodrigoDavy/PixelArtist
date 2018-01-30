@@ -3,21 +3,38 @@ package rodrigodavy.com.github.pixelartist;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,13 +47,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        //Hides ActionBar to free some precious screen space
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.hide();
-        }*/
-
         initPalette();
         initPixels();
     }
@@ -46,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
-                Button b = (Button) findViewById(data.getIntExtra("id",0));
+                Button b = findViewById(data.getIntExtra("id",0));
                 GradientDrawable gd = (GradientDrawable) b.getBackground();
                 int c = data.getIntExtra("color",0);
                 gd.setColor(c);
@@ -71,11 +81,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
-        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        LayoutInflater layoutInflater = this.getLayoutInflater();
 
         switch (item.getItemId()) {
             case R.id.menu_new:
                 final View v = findViewById(R.id.color_button_1);
+
 
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
                 alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
@@ -93,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
-
                 return true;
             case R.id.menu_fill:
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
@@ -117,33 +128,252 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_grid:
                 pixelGrid();
                 return true;
+            case R.id.menu_open:
+
+                File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                if ((path != null) && (path.listFiles().length>0)) {
+                    File[] files = path.listFiles();
+
+                    List<CharSequence> list = new ArrayList<>();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle(R.string.menu_open);
+
+                    for(File file:files) {
+                        if(file.getName().contains(".pixel_artist")) {
+                            list.add(0,file.getName().replace(".pixel_artist",""));
+                        }
+                    }
+
+                    final CharSequence[] charSequences = list.toArray(new CharSequence[list.size()]);
+
+                    builder.setItems(charSequences, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            openFile(charSequences[i].toString() + ".pixel_artist");
+                            alertDialog.dismiss();
+                        }
+                    });
+                    builder.show();
+                }else{
+                    Toast toast = Toast.makeText(this, R.string.no_files_found,Toast.LENGTH_LONG);
+                    toast.show();
+                }
+
+                return true;
             case R.id.menu_save:
-                Toast toast = Toast.makeText(this, R.string.toast_save,Toast.LENGTH_LONG);
-                toast.show();
+                alertDialog.setTitle(getString(R.string.menu_save));
+                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
+                                String filename = null;
+                                if (editText != null) {
+                                    filename = editText.getText() + ".pixel_artist";
+                                }
+
+                                saveFile(filename);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
+                return true;
+            case R.id.menu_export:
+                String filename;
+
+                Calendar calendar = Calendar.getInstance();
+
+                long unixTime = System.currentTimeMillis() / 1000;
+                unixTime %= 1000000;
+
+                filename = "IMG_" + calendar.get(Calendar.YEAR) +
+                        calendar.get(Calendar.MONTH) + calendar.get(Calendar.DAY_OF_MONTH) +
+                        "_" + unixTime + ".jpg";
+
+                screenShot(findViewById(R.id.paper_linear_layout),filename);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    public void openFile(String fileName) {
+        File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File openFile = new File(imageFolder,fileName);
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(openFile));
+            int color;
+            String value;
+
+            int x,y;
+
+            if((value = bufferedReader.readLine()) != null) {
+                x = Integer.valueOf(value);
+            }else{
+                throw new IOException();
+            }
+
+            if((value = bufferedReader.readLine()) != null) {
+                y = Integer.valueOf(value);
+            }else{
+                throw new IOException();
+            }
+
+            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+
+            for(int i=0;i<x;i++) {
+                for(int j=0;j<y;j++) {
+
+                    if((value = bufferedReader.readLine()) != null) {
+                        color = Integer.valueOf(value);
+                    }else{
+                        throw new IOException();
+                    }
+
+                    View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
+                    v.setBackgroundColor(color);
+                }
+            }
+
+            Toast toast = Toast.makeText(this, R.string.file_opened,Toast.LENGTH_SHORT);
+            toast.show();
+
+        } catch (FileNotFoundException e) {
+            Log.e("MainActivity.openFile","File not found");
+            Toast toast = Toast.makeText(this, R.string.file_not_found,Toast.LENGTH_LONG);
+            toast.show();
+        } catch (IOException e) {
+            Log.e("MainActivity.openFile","Could not open file");
+            Toast toast = Toast.makeText(this, R.string.could_not_open,Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+    public void saveFile(String fileName) {
+        if(!isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(),"External Storage is not writable");
+        }
+
+        File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File saveFile = new File(imageFolder,fileName);
+
+        try {
+            if(!saveFile.exists()) {
+                saveFile.createNewFile();
+            }
+
+            FileWriter fileWriter = new FileWriter(saveFile);
+            fileWriter.append("16\n16\n");
+
+            LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
+            for(int i=0;i<16;i++) {
+                for(int j=0;j<16;j++) {
+                    View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
+                    int color = ((ColorDrawable) v.getBackground()).getColor();
+                    fileWriter.append(String.valueOf(color));
+                    fileWriter.append("\n");
+                }
+            }
+            fileWriter.flush();
+            fileWriter.close();
+
+            Toast toast = Toast.makeText(this, R.string.toast_saved,Toast.LENGTH_SHORT);
+            toast.show();
+        } catch (IOException e) {
+            Log.e("MainActivity.saveFile","File not found");
+            Toast toast = Toast.makeText(this, R.string.toast_not_saved,Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+    public void screenShot(View view,String filename) {
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        if(!isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(),"External Storage is not writable");
+        }
+
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),getString(R.string.app_name));
+
+        boolean success = true;
+
+        if (!imageFolder.exists()) {
+            success = imageFolder.mkdirs();
+        }
+
+        if(success) {
+            File imageFile = new File(imageFolder, filename);
+
+            FileOutputStream outputStream;
+
+            try {
+
+                if (!imageFile.exists()) {
+                    imageFile.createNewFile();
+                }
+
+                outputStream = new FileOutputStream(imageFile);
+                int quality = 100;
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+
+                openScreenshot(imageFile);
+            } catch (FileNotFoundException e) {
+                Log.e(MainActivity.class.getName(), "File not found");
+            } catch (IOException e) {
+                Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
+            }
+        }else{
+            Toast toast = Toast.makeText(this, R.string.toast_could_not_create_app_folder,Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
+
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+        startActivity(intent);
+    }
+
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
     private void initPalette() {
         colorButtons = new Button[] {
-                (Button) findViewById(R.id.color_button_0),
-                (Button) findViewById(R.id.color_button_1),
-                (Button) findViewById(R.id.color_button_2),
-                (Button) findViewById(R.id.color_button_3),
-                (Button) findViewById(R.id.color_button_4),
-                (Button) findViewById(R.id.color_button_5),
-                (Button) findViewById(R.id.color_button_6),
-                (Button) findViewById(R.id.color_button_7),
-                (Button) findViewById(R.id.color_button_8),
-                (Button) findViewById(R.id.color_button_9),
-                (Button) findViewById(R.id.color_button_10),
-                (Button) findViewById(R.id.color_button_11),
-                (Button) findViewById(R.id.color_button_12),
-                (Button) findViewById(R.id.color_button_13),
-                (Button) findViewById(R.id.color_button_14),
-                (Button) findViewById(R.id.color_button_15)
+                findViewById(R.id.color_button_0),
+                findViewById(R.id.color_button_1),
+                findViewById(R.id.color_button_2),
+                findViewById(R.id.color_button_3),
+                findViewById(R.id.color_button_4),
+                findViewById(R.id.color_button_5),
+                findViewById(R.id.color_button_6),
+                findViewById(R.id.color_button_7),
+                findViewById(R.id.color_button_8),
+                findViewById(R.id.color_button_9),
+                findViewById(R.id.color_button_10),
+                findViewById(R.id.color_button_11),
+                findViewById(R.id.color_button_12),
+                findViewById(R.id.color_button_13),
+                findViewById(R.id.color_button_14),
+                findViewById(R.id.color_button_15)
         };
 
         colors = new int[] {
@@ -205,7 +435,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Initializes the "pixels" (basically sets OnLongClickListerner on them)
     private void initPixels() {
-        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
         for(int i=0;i<paper.getChildCount();i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
@@ -227,7 +457,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Shows or hides the pixels boundaries from the paper_linear_layout
     private void pixelGrid() {
-        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
         for(int i=0;i<paper.getChildCount();i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
@@ -250,7 +480,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Fills paper_linear_layout with chosen color
     private void fillScreen(int color) {
-        LinearLayout paper = (LinearLayout) findViewById(R.id.paper_linear_layout);
+        LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
         for(int i=0;i<paper.getChildCount();i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);

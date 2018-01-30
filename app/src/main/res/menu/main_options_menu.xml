@@ -14,8 +14,14 @@
         android:icon="@drawable/menu_grid"
         android:title="@string/menu_grid"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_open"
+    android:title="@string/menu_open"
+    app:showAsAction="never" />
     <item android:id="@+id/menu_save"
         android:icon="@drawable/menu_save"
         android:title="@string/menu_save"
         app:showAsAction="ifRoom" />
+    <item android:id="@+id/menu_export"
+        android:title="@string/menu_export"
+        app:showAsAction="never" />
 </menu>
