@@ -49,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
         initPalette();
         initPixels();
+
+        openFile(".tmp",false);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        saveFile(".tmp",false);
     }
 
     @Override
@@ -150,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setItems(charSequences, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            openFile(charSequences[i].toString() + ".pixel_artist");
+                            openFile(charSequences[i].toString() + ".pixel_artist",true);
                             alertDialog.dismiss();
                         }
                     });
@@ -175,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                                     filename = editText.getText() + ".pixel_artist";
                                 }
 
-                                saveFile(filename);
+                                saveFile(filename,true);
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
@@ -206,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openFile(String fileName) {
+    public void openFile(String fileName,boolean showToast) {
         File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File openFile = new File(imageFolder,fileName);
 
@@ -245,21 +254,27 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Toast toast = Toast.makeText(this, R.string.file_opened,Toast.LENGTH_SHORT);
-            toast.show();
+            if(showToast) {
+                Toast toast = Toast.makeText(this, R.string.file_opened, Toast.LENGTH_SHORT);
+                toast.show();
+            }
 
         } catch (FileNotFoundException e) {
             Log.e("MainActivity.openFile","File not found");
-            Toast toast = Toast.makeText(this, R.string.file_not_found,Toast.LENGTH_LONG);
-            toast.show();
+            if(showToast) {
+                Toast toast = Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_LONG);
+                toast.show();
+            }
         } catch (IOException e) {
             Log.e("MainActivity.openFile","Could not open file");
-            Toast toast = Toast.makeText(this, R.string.could_not_open,Toast.LENGTH_LONG);
-            toast.show();
+            if(showToast) {
+                Toast toast = Toast.makeText(this, R.string.could_not_open, Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
     }
 
-    public void saveFile(String fileName) {
+    public void saveFile(String fileName,boolean showToast) {
         if(!isExternalStorageWritable()) {
             Log.e(MainActivity.class.getName(),"External Storage is not writable");
         }
@@ -287,12 +302,17 @@ public class MainActivity extends AppCompatActivity {
             fileWriter.flush();
             fileWriter.close();
 
-            Toast toast = Toast.makeText(this, R.string.toast_saved,Toast.LENGTH_SHORT);
-            toast.show();
+            if(showToast) {
+                Toast toast = Toast.makeText(this, R.string.toast_saved, Toast.LENGTH_SHORT);
+                toast.show();
+            }
         } catch (IOException e) {
             Log.e("MainActivity.saveFile","File not found");
-            Toast toast = Toast.makeText(this, R.string.toast_not_saved,Toast.LENGTH_LONG);
-            toast.show();
+
+            if(showToast) {
+                Toast toast = Toast.makeText(this, R.string.toast_not_saved, Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
     }
 
