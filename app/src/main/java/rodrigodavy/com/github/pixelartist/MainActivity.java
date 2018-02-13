@@ -1,5 +1,6 @@
 package rodrigodavy.com.github.pixelartist;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +11,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,9 +23,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -42,15 +49,111 @@ public class MainActivity extends AppCompatActivity {
     private Button colorButtons[];
     private int colors[];
 
+    private ActionBarDrawerToggle drawerToggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer_layout);
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close
+        );
+
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(drawerToggle);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+
+        if(actionBar!=null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        ListView leftDrawer = findViewById(R.id.left_drawer);
+        final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
+
+        listMenuItem.add(new DrawerMenuItem(R.drawable.menu_new, R.string.menu_new) {
+            @Override
+            public void execute() {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                final View v = findViewById(R.id.color_button_1);
+
+                alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
+                alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                fillScreen(ContextCompat.getColor(MainActivity.this,R.color.color_1));
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+
+        listMenuItem.add(new DrawerMenuItem(R.drawable.menu_save, R.string.menu_save) {
+            @Override
+            public void execute() {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
+
+                alertDialog.setTitle(getString(R.string.menu_save));
+                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
+                                String filename = null;
+                                if (editText != null) {
+                                    filename = editText.getText() + ".pixel_artist";
+                                }
+
+                                saveFile(filename,true);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+
+        DrawerMenuItemAdapter adapter = new DrawerMenuItemAdapter(this,listMenuItem);
+        leftDrawer.setAdapter(adapter);
+
+        leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listMenuItem.get(i).execute();
+            }
+        });
 
         initPalette();
         initPixels();
 
         openFile(".tmp",false);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
 
     @Override
@@ -60,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         saveFile(".tmp",false);
     }
 
+    //Applying changes made in the ColorSelector activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -93,10 +197,13 @@ public class MainActivity extends AppCompatActivity {
         final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
         LayoutInflater layoutInflater = this.getLayoutInflater();
 
+        if(drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         switch (item.getItemId()) {
             case R.id.menu_new:
                 final View v = findViewById(R.id.color_button_1);
-
 
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
                 alertDialog.setMessage(getString(R.string.alert_dialog_message_new));

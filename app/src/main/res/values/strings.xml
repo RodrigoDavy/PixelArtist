@@ -28,4 +28,7 @@
     <string name="filename">Filename</string>
     <string name="no_files_found">No files found</string>
     <string name="toast_could_not_create_app_folder">Could not create app folder</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
 </resources>
