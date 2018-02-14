@@ -5,11 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,9 +23,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -42,15 +48,64 @@ public class MainActivity extends AppCompatActivity {
     private Button colorButtons[];
     private int colors[];
 
+    private ActionBarDrawerToggle drawerToggle;
+    private final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
+
+    private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer_layout);
+
+        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawerLayout,
+                R.string.drawer_open,
+                R.string.drawer_close
+        ){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                updateDrawerHeader();
+            }
+        };
+
+        drawerToggle.setDrawerIndicatorEnabled(true);
+        drawerLayout.addDrawerListener(drawerToggle);
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+
+        if(actionBar!=null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+        }
+
+        ListView leftDrawer = findViewById(R.id.left_drawer);
+
+        addDrawerItems();
+
+        DrawerMenuItemAdapter adapter = new DrawerMenuItemAdapter(this,listMenuItem);
+        leftDrawer.setAdapter(adapter);
+
+        leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                listMenuItem.get(i).execute();
+            }
+        });
 
         initPalette();
         initPixels();
 
         openFile(".tmp",false);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
     }
 
     @Override
@@ -60,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         saveFile(".tmp",false);
     }
 
+    //Applying changes made in the ColorSelector activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -80,23 +136,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        LayoutInflater layoutInflater = this.getLayoutInflater();
-
-        switch (item.getItemId()) {
-            case R.id.menu_new:
+    private void addDrawerItems() {
+        DrawerMenuItem drawerNew = new DrawerMenuItem(R.drawable.menu_new, R.string.menu_new) {
+            @Override
+            public void execute() {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 final View v = findViewById(R.id.color_button_1);
-
 
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
                 alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
@@ -105,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 fillScreen(ContextCompat.getColor(MainActivity.this,R.color.color_1));
+                                updateDrawerHeader();
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
@@ -114,38 +160,20 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
-                return true;
-            case R.id.menu_fill:
-                alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
-                alertDialog.setMessage(getString(R.string.alert_dialog_message_fill));
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                fillScreen(currentColor);
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
+            }
+        };
 
-                return true;
-            case R.id.menu_grid:
-                pixelGrid();
-                return true;
-            case R.id.menu_open:
-
+        DrawerMenuItem drawerOpen = new DrawerMenuItem(R.drawable.menu_open,R.string.menu_open) {
+            @Override
+            public void execute() {
                 File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
                 if ((path != null) && (path.listFiles().length>0)) {
                     File[] files = path.listFiles();
 
                     List<CharSequence> list = new ArrayList<>();
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(R.string.menu_open);
 
                     for(File file:files) {
@@ -160,17 +188,23 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             openFile(charSequences[i].toString() + ".pixel_artist",true);
-                            alertDialog.dismiss();
+                            updateDrawerHeader();
                         }
                     });
                     builder.show();
                 }else{
-                    Toast toast = Toast.makeText(this, R.string.no_files_found,Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(MainActivity.this, R.string.no_files_found,Toast.LENGTH_LONG);
                     toast.show();
                 }
+            }
+        };
 
-                return true;
-            case R.id.menu_save:
+        DrawerMenuItem drawerSave = new DrawerMenuItem(R.drawable.menu_save, R.string.menu_save) {
+            @Override
+            public void execute() {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
+
                 alertDialog.setTitle(getString(R.string.menu_save));
                 alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
@@ -194,9 +228,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
+            }
+        };
 
-                return true;
-            case R.id.menu_export:
+        DrawerMenuItem drawerExport = new DrawerMenuItem(R.drawable.menu_export,R.string.menu_export) {
+            @Override
+            public void execute() {
                 String filename;
 
                 Calendar calendar = Calendar.getInstance();
@@ -209,6 +246,65 @@ public class MainActivity extends AppCompatActivity {
                         "_" + unixTime + ".jpg";
 
                 screenShot(findViewById(R.id.paper_linear_layout),filename);
+            }
+        };
+
+        DrawerMenuItem drawerAbout = new DrawerMenuItem(R.drawable.menu_about,R.string.menu_about) {
+            @Override
+            public void execute() {
+                Uri uri = Uri.parse(URL_ABOUT);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        };
+
+        listMenuItem.add(drawerNew);
+        listMenuItem.add(drawerOpen);
+        listMenuItem.add(drawerSave);
+        listMenuItem.add(drawerExport);
+        listMenuItem.add(drawerAbout);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        LayoutInflater layoutInflater = this.getLayoutInflater();
+
+        if(drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch (item.getItemId()) {
+            case R.id.menu_fill:
+                alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
+                alertDialog.setMessage(getString(R.string.alert_dialog_message_fill));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                fillScreen(currentColor);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
+                return true;
+            case R.id.menu_grid:
+                pixelGrid();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -322,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
 
+
         if(!isExternalStorageWritable()) {
             Log.e(MainActivity.class.getName(),"External Storage is not writable");
         }
@@ -374,6 +471,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    private void updateDrawerHeader() {
+        View view = findViewById(R.id.paper_linear_layout);
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        ImageView header = findViewById(R.id.drawer_header);
+        header.setImageBitmap(bitmap);
     }
 
     private void initPalette() {

@@ -8,6 +8,7 @@
     <string name="menu_fill">Preencher com a cor selecionada</string>
     <string name="menu_grid">Mostrar/esconder grade de pixels</string>
     <string name="menu_save">Salvar</string>
+    <string name="menu_about">Sobre</string>
 
     <string name="toast_save">Desculpe, não está implementado ainda! Use a captura de tela  :)</string>
 
