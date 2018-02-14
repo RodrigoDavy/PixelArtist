@@ -8,6 +8,7 @@
     <string name="menu_fill">Rellenar la pantalla con el color seleccionado</string>
     <string name="menu_grid">Mostrar/esconder cuadrícula</string>
     <string name="menu_save">Guardar</string>
+    <string name="menu_about">Acerca de</string>
 
     <string name="toast_save">¡Lo sentimos, aún no está disponible! Haz una captura de pantalla :)</string>
 

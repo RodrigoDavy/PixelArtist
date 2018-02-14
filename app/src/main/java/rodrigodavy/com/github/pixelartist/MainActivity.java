@@ -1,6 +1,5 @@
 package rodrigodavy.com.github.pixelartist;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,12 +23,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -51,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle drawerToggle;
     private final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
+
+    private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,11 +240,21 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        DrawerMenuItem drawerAbout = new DrawerMenuItem(R.drawable.menu_about,R.string.menu_about) {
+            @Override
+            public void execute() {
+                Uri uri = Uri.parse(URL_ABOUT);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(uri);
+                startActivity(intent);
+            }
+        };
 
         listMenuItem.add(drawerNew);
         listMenuItem.add(drawerOpen);
         listMenuItem.add(drawerSave);
         listMenuItem.add(drawerExport);
+        listMenuItem.add(drawerAbout);
     }
 
     @Override
