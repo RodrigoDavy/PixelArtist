@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private int colors[];
 
     private ActionBarDrawerToggle drawerToggle;
+    private final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,64 +76,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ListView leftDrawer = findViewById(R.id.left_drawer);
-        final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
 
-        listMenuItem.add(new DrawerMenuItem(R.drawable.menu_new, R.string.menu_new) {
-            @Override
-            public void execute() {
-                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                final View v = findViewById(R.id.color_button_1);
-
-                alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
-                alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                fillScreen(ContextCompat.getColor(MainActivity.this,R.color.color_1));
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-            }
-        });
-
-        listMenuItem.add(new DrawerMenuItem(R.drawable.menu_save, R.string.menu_save) {
-            @Override
-            public void execute() {
-                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
-
-                alertDialog.setTitle(getString(R.string.menu_save));
-                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-
-                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
-                                String filename = null;
-                                if (editText != null) {
-                                    filename = editText.getText() + ".pixel_artist";
-                                }
-
-                                saveFile(filename,true);
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-            }
-        });
+        addDrawerItems();
 
         DrawerMenuItemAdapter adapter = new DrawerMenuItemAdapter(this,listMenuItem);
         leftDrawer.setAdapter(adapter);
@@ -184,25 +129,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_options_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
+    private void addDrawerItems() {
         final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        LayoutInflater layoutInflater = this.getLayoutInflater();
 
-        if(drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        switch (item.getItemId()) {
-            case R.id.menu_new:
+        DrawerMenuItem drawerNew = new DrawerMenuItem(R.drawable.menu_new, R.string.menu_new) {
+            @Override
+            public void execute() {
                 final View v = findViewById(R.id.color_button_1);
 
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
@@ -221,38 +153,19 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
-                return true;
-            case R.id.menu_fill:
-                alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
-                alertDialog.setMessage(getString(R.string.alert_dialog_message_fill));
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                fillScreen(currentColor);
-                            }
-                        });
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
+            }
+        };
 
-                return true;
-            case R.id.menu_grid:
-                pixelGrid();
-                return true;
-            case R.id.menu_open:
-
+        DrawerMenuItem drawerOpen = new DrawerMenuItem(R.drawable.menu_open,R.string.menu_open) {
+            @Override
+            public void execute() {
                 File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
                 if ((path != null) && (path.listFiles().length>0)) {
                     File[] files = path.listFiles();
 
                     List<CharSequence> list = new ArrayList<>();
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(R.string.menu_open);
 
                     for(File file:files) {
@@ -272,12 +185,17 @@ public class MainActivity extends AppCompatActivity {
                     });
                     builder.show();
                 }else{
-                    Toast toast = Toast.makeText(this, R.string.no_files_found,Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(MainActivity.this, R.string.no_files_found,Toast.LENGTH_LONG);
                     toast.show();
                 }
+            }
+        };
 
-                return true;
-            case R.id.menu_save:
+        DrawerMenuItem drawerSave = new DrawerMenuItem(R.drawable.menu_save, R.string.menu_save) {
+            @Override
+            public void execute() {
+                LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
+
                 alertDialog.setTitle(getString(R.string.menu_save));
                 alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
@@ -301,9 +219,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 alertDialog.show();
+            }
+        };
 
-                return true;
-            case R.id.menu_export:
+        DrawerMenuItem drawerExport = new DrawerMenuItem(R.drawable.menu_export,R.string.menu_export) {
+            @Override
+            public void execute() {
                 String filename;
 
                 Calendar calendar = Calendar.getInstance();
@@ -316,6 +237,55 @@ public class MainActivity extends AppCompatActivity {
                         "_" + unixTime + ".jpg";
 
                 screenShot(findViewById(R.id.paper_linear_layout),filename);
+            }
+        };
+
+
+        listMenuItem.add(drawerNew);
+        listMenuItem.add(drawerOpen);
+        listMenuItem.add(drawerSave);
+        listMenuItem.add(drawerExport);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_options_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        LayoutInflater layoutInflater = this.getLayoutInflater();
+
+        if(drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        switch (item.getItemId()) {
+            case R.id.menu_fill:
+                alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
+                alertDialog.setMessage(getString(R.string.alert_dialog_message_fill));
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                fillScreen(currentColor);
+                            }
+                        });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+
+                return true;
+            case R.id.menu_grid:
+                pixelGrid();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

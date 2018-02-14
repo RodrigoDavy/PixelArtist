@@ -2,10 +2,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_new"
-        android:icon="@drawable/menu_new"
-        android:title="@string/menu_new"
-        app:showAsAction="ifRoom" />
     <item android:id="@+id/menu_fill"
         android:icon="@drawable/menu_fill"
         android:title="@string/menu_fill"
@@ -14,14 +10,4 @@
         android:icon="@drawable/menu_grid"
         android:title="@string/menu_grid"
         app:showAsAction="ifRoom" />
-    <item android:id="@+id/menu_open"
-    android:title="@string/menu_open"
-    app:showAsAction="never" />
-    <item android:id="@+id/menu_save"
-        android:icon="@drawable/menu_save"
-        android:title="@string/menu_save"
-        app:showAsAction="ifRoom" />
-    <item android:id="@+id/menu_export"
-        android:title="@string/menu_export"
-        app:showAsAction="never" />
 </menu>
