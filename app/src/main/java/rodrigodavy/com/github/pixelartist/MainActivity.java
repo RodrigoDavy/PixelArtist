@@ -130,11 +130,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addDrawerItems() {
-        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-
         DrawerMenuItem drawerNew = new DrawerMenuItem(R.drawable.menu_new, R.string.menu_new) {
             @Override
             public void execute() {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 final View v = findViewById(R.id.color_button_1);
 
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
@@ -160,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void execute() {
                 File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+
                 if ((path != null) && (path.listFiles().length>0)) {
                     File[] files = path.listFiles();
 
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             openFile(charSequences[i].toString() + ".pixel_artist",true);
-                            alertDialog.dismiss();
+                            //alertDialog.dismiss();
                         }
                     });
                     builder.show();
@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
         DrawerMenuItem drawerSave = new DrawerMenuItem(R.drawable.menu_save, R.string.menu_save) {
             @Override
             public void execute() {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                 LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
 
                 alertDialog.setTitle(getString(R.string.menu_save));
