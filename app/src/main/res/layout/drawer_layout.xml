@@ -7,12 +7,7 @@
     <include
         layout="@layout/activity_main" />
 
-    <ListView
-        android:id="@+id/left_drawer"
-        android:layout_width="240dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        android:background="@android:color/white"/>
+    <include
+        layout="@layout/drawer" />
 
 </android.support.v4.widget.DrawerLayout>

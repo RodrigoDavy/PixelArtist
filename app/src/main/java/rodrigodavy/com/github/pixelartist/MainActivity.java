@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -25,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -62,7 +64,13 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout,
                 R.string.drawer_open,
                 R.string.drawer_close
-        );
+        ){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                updateDrawerHeader();
+            }
+        };
 
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
@@ -142,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 fillScreen(ContextCompat.getColor(MainActivity.this,R.color.color_1));
+                                updateDrawerHeader();
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
@@ -179,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             openFile(charSequences[i].toString() + ".pixel_artist",true);
-                            //alertDialog.dismiss();
+                            updateDrawerHeader();
                         }
                     });
                     builder.show();
@@ -409,6 +418,7 @@ public class MainActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
 
+
         if(!isExternalStorageWritable()) {
             Log.e(MainActivity.class.getName(),"External Storage is not writable");
         }
@@ -461,6 +471,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    private void updateDrawerHeader() {
+        View view = findViewById(R.id.paper_linear_layout);
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
+                view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        ImageView header = findViewById(R.id.drawer_header);
+        header.setImageBitmap(bitmap);
     }
 
     private void initPalette() {
