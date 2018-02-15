@@ -3,9 +3,9 @@ package rodrigodavy.com.github.pixelartist;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle drawerToggle;
     private final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
 
+    private SharedPreferences settings;
+    private boolean grid;
+
+    private static final String SETTINGS_GRID = "grid";
     private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
 
     @Override
@@ -99,6 +103,14 @@ public class MainActivity extends AppCompatActivity {
         initPalette();
         initPixels();
 
+        settings = getPreferences(0);
+        grid = settings.getBoolean(SETTINGS_GRID,true);
+
+        if(!grid) {
+            grid = true;
+            pixelGrid();
+        }
+
         openFile(".tmp",false);
     }
 
@@ -113,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
 
         saveFile(".tmp",false);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(SETTINGS_GRID,grid);
+        editor.apply();
     }
 
     //Applying changes made in the ColorSelector activity
@@ -587,6 +602,19 @@ public class MainActivity extends AppCompatActivity {
     private void pixelGrid() {
         LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
+        int x;
+        int y;
+
+        if(grid) {
+            x = 0;
+            y = 0;
+        }else{
+            x = 1;
+            y = 1;
+        }
+
+        grid = !grid;
+
         for(int i=0;i<paper.getChildCount();i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
 
@@ -595,12 +623,7 @@ public class MainActivity extends AppCompatActivity {
 
                 ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) pixel.getLayoutParams();
 
-                if(layoutParams.leftMargin>0) {
-                    layoutParams.setMargins(0,0,0,0);
-                } else {
-                    layoutParams.setMargins(1,1,0,0);
-                }
-
+                layoutParams.setMargins(x,y,0,0);
                 pixel.setLayoutParams(layoutParams);
             }
         }
