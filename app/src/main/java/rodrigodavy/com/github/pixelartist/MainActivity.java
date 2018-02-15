@@ -292,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-        LayoutInflater layoutInflater = this.getLayoutInflater();
 
         if(drawerToggle.onOptionsItemSelected(item)) {
             return true;
@@ -307,6 +306,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 fillScreen(currentColor);
+                                updateDrawerHeader();
                             }
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
