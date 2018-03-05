@@ -3,6 +3,8 @@ A simple app for doing Pixel Art on Android and having fun
 
 Built using Android Studio
 
+Special thanks to Marco (the Pineapple) from Spain for helping me with the Spanish translation! :)
+
 ## Features:
 
 - Color your pixels by pressing them (duh!)
