@@ -32,5 +32,6 @@
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
+
     <string name="no_write_permission">Error! The app doesn\'t have write permission</string>
 </resources>
