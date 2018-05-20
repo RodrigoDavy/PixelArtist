@@ -30,4 +30,6 @@
     <string name="filename">Nombre del archivo</string>
     <string name="no_files_found">No se encontraron archivos</string>
     <string name="toast_could_not_create_app_folder">No se pudo crear una carpeta de imágenes</string>
+
+    <string name="no_write_permission">¡Error! La aplicación no tiene permiso de escritura</string>
 </resources>

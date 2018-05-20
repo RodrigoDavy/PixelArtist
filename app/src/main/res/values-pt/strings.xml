@@ -30,4 +30,5 @@
     <string name="filename">Nome do arquivo</string>
     <string name="no_files_found">Nenhum arquivo encontrado</string>
     <string name="toast_could_not_create_app_folder">A pasta do aplicativo não pôde ser criada</string>
+    <string name="no_write_permission">Erro! O aplicativo não tem permissão de escrita</string>
 </resources>

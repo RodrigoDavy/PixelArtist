@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
@@ -428,11 +429,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void screenShot(View view,String filename) {
+
+        if(!checkWriteExternalPermission()) {
+            Toast toast = Toast.makeText(this, R.string.no_write_permission,Toast.LENGTH_LONG);
+            toast.show();
+
+            return;
+        }
+
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
                 view.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
-
 
         if(!isExternalStorageWritable()) {
             Log.e(MainActivity.class.getName(),"External Storage is not writable");
@@ -483,9 +491,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public boolean isExternalStorageWritable() {
+    private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    private boolean checkWriteExternalPermission()
+    {
+        String permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        int res = this.checkCallingPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 
     private void updateDrawerHeader() {
