@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ColorButton" >
+    <style name="ColorButton">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:onClick">selectColor</item>
@@ -30,18 +30,15 @@
         <item name="android:max">255</item>
     </style>
 
-    <style name="RedSeekBar"
-        parent="Widget.AppCompat.SeekBar">
+    <style name="RedSeekBar" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">#ff0000</item>
     </style>
 
-    <style name="GreenSeekBar"
-        parent="Widget.AppCompat.SeekBar">
+    <style name="GreenSeekBar" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">#00ff00</item>
     </style>
 
-    <style name="BlueSeekBar"
-        parent="Widget.AppCompat.SeekBar">
+    <style name="BlueSeekBar" parent="Widget.AppCompat.SeekBar">
         <item name="colorAccent">#0000ff</item>
     </style>
 </resources>
