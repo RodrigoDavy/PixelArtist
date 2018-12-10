@@ -23,22 +23,37 @@
                 android:background="@android:color/darker_gray"
                 android:orientation="vertical">
 
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
-                <include layout="@layout/paper_line"/>
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
+
+                <include layout="@layout/paper_line" />
             </LinearLayout>
 
         </HorizontalScrollView>
@@ -49,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/canvas"/>
+        <include layout="@layout/canvas" />
 
     </HorizontalScrollView>
 

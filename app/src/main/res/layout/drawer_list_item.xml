@@ -4,11 +4,11 @@
     android:id="@+id/drawer_item_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:gravity="center_vertical"
     android:drawableStart="@drawable/menu_new"
     android:drawableLeft="@drawable/menu_new"
     android:drawablePadding="4dp"
+    android:gravity="center_vertical"
+    android:padding="8dp"
     android:textColor="@android:color/black"
     android:textSize="22sp"
     tools:text="@string/menu_new" />

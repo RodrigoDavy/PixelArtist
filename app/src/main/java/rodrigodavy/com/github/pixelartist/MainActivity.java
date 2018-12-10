@@ -1,7 +1,6 @@
 package rodrigodavy.com.github.pixelartist;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,13 +9,8 @@ import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +35,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,12 +64,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.drawer_layout);
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawerLayout,
-                R.string.drawer_open,
-                R.string.drawer_close
-        ){
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+                R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
@@ -80,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerLayout.addDrawerListener(drawerToggle);
 
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
 
-        if(actionBar!=null) {
+        if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
@@ -91,28 +87,23 @@ public class MainActivity extends AppCompatActivity {
 
         addDrawerItems();
 
-        DrawerMenuItemAdapter adapter = new DrawerMenuItemAdapter(this,listMenuItem);
+        DrawerMenuItemAdapter adapter = new DrawerMenuItemAdapter(this, listMenuItem);
         leftDrawer.setAdapter(adapter);
 
-        leftDrawer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                listMenuItem.get(i).execute();
-            }
-        });
+        leftDrawer.setOnItemClickListener((adapterView, view, i, l) -> listMenuItem.get(i).execute());
 
         initPalette();
         initPixels();
 
         settings = getPreferences(0);
-        grid = settings.getBoolean(SETTINGS_GRID,true);
+        grid = settings.getBoolean(SETTINGS_GRID, true);
 
-        if(!grid) {
+        if (!grid) {
             grid = true;
             pixelGrid();
         }
 
-        openFile(".tmp",false);
+        openFile(".tmp", false);
     }
 
     @Override
@@ -125,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        saveFile(".tmp",false);
+        saveFile(".tmp", false);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(SETTINGS_GRID,grid);
+        editor.putBoolean(SETTINGS_GRID, grid);
         editor.apply();
     }
 
@@ -136,15 +127,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                Button b = findViewById(data.getIntExtra("id",0));
+            if (resultCode == Activity.RESULT_OK) {
+                Button b = findViewById(data.getIntExtra("id", 0));
                 GradientDrawable gd = (GradientDrawable) b.getBackground();
-                int c = data.getIntExtra("color",0);
+                int c = data.getIntExtra("color", 0);
                 gd.setColor(c);
 
-                colors[data.getIntExtra("position",0)] = c;
+                colors[data.getIntExtra("position", 0)] = c;
 
-                if(data.getBooleanExtra("currentColor",false)) {
+                if (data.getBooleanExtra("currentColor", false)) {
                     currentColor = c;
                     findViewById(R.id.palette_linear_layout).setBackgroundColor(currentColor);
                 }
@@ -162,29 +153,23 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
                 alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                fillScreen(ContextCompat.getColor(MainActivity.this,R.color.color_1));
-                                updateDrawerHeader();
-                            }
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            fillScreen(ContextCompat.getColor(MainActivity.this, R.color.color_1));
+                            updateDrawerHeader();
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        (dialog, which) -> dialog.dismiss());
                 alertDialog.show();
             }
         };
 
-        DrawerMenuItem drawerOpen = new DrawerMenuItem(R.drawable.menu_open,R.string.menu_open) {
+        DrawerMenuItem drawerOpen = new DrawerMenuItem(R.drawable.menu_open, R.string.menu_open) {
             @Override
             public void execute() {
                 File path = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
-                if ((path != null) && (path.listFiles().length>0)) {
+                if ((path != null) && (path.listFiles().length > 0)) {
                     File[] files = path.listFiles();
 
                     List<CharSequence> list = new ArrayList<>();
@@ -192,24 +177,21 @@ public class MainActivity extends AppCompatActivity {
                     AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                     builder.setTitle(R.string.menu_open);
 
-                    for(File file:files) {
-                        if(file.getName().contains(".pixel_artist")) {
-                            list.add(0,file.getName().replace(".pixel_artist",""));
+                    for (File file : files) {
+                        if (file.getName().contains(".pixel_artist")) {
+                            list.add(0, file.getName().replace(".pixel_artist", ""));
                         }
                     }
 
-                    final CharSequence[] charSequences = list.toArray(new CharSequence[list.size()]);
+                    final CharSequence[] charSequences = list.toArray(new CharSequence[0]);
 
-                    builder.setItems(charSequences, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            openFile(charSequences[i].toString() + ".pixel_artist",true);
-                            updateDrawerHeader();
-                        }
+                    builder.setItems(charSequences, (dialogInterface, i) -> {
+                        openFile(charSequences[i].toString() + ".pixel_artist", true);
+                        updateDrawerHeader();
                     });
                     builder.show();
-                }else{
-                    Toast toast = Toast.makeText(MainActivity.this, R.string.no_files_found,Toast.LENGTH_LONG);
+                } else {
+                    Toast toast = Toast.makeText(MainActivity.this, R.string.no_files_found, Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
@@ -222,32 +204,24 @@ public class MainActivity extends AppCompatActivity {
                 LayoutInflater layoutInflater = MainActivity.this.getLayoutInflater();
 
                 alertDialog.setTitle(getString(R.string.menu_save));
-                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save,null));
+                alertDialog.setView(layoutInflater.inflate(R.layout.dialog_save, null));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-
-                                EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
-                                String filename = null;
-                                if (editText != null) {
-                                    filename = editText.getText() + ".pixel_artist";
-                                }
-
-                                saveFile(filename,true);
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            EditText editText = alertDialog.findViewById(R.id.dialog_filename_edit_text);
+                            String filename = null;
+                            if (editText != null) {
+                                filename = editText.getText() + ".pixel_artist";
                             }
+                            saveFile(filename, true);
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        (dialog, which) -> dialog.dismiss());
                 alertDialog.show();
             }
         };
 
-        DrawerMenuItem drawerExport = new DrawerMenuItem(R.drawable.menu_export,R.string.menu_export) {
+        DrawerMenuItem drawerExport = new DrawerMenuItem(R.drawable.menu_export, R.string.menu_export) {
             @Override
             public void execute() {
                 String filename;
@@ -257,15 +231,16 @@ public class MainActivity extends AppCompatActivity {
                 long unixTime = System.currentTimeMillis() / 1000;
                 unixTime %= 1000000;
 
-                filename = "IMG_" + calendar.get(Calendar.YEAR) +
-                        calendar.get(Calendar.MONTH) + calendar.get(Calendar.DAY_OF_MONTH) +
-                        "_" + unixTime + ".jpg";
+                filename = "IMG_"
+                        + calendar.get(Calendar.YEAR)
+                        + calendar.get(Calendar.MONTH)
+                        + calendar.get(Calendar.DAY_OF_MONTH) + "_" + unixTime + ".jpg";
 
-                screenShot(findViewById(R.id.paper_linear_layout),filename);
+                screenShot(findViewById(R.id.paper_linear_layout), filename);
             }
         };
 
-        DrawerMenuItem drawerAbout = new DrawerMenuItem(R.drawable.menu_about,R.string.menu_about) {
+        DrawerMenuItem drawerAbout = new DrawerMenuItem(R.drawable.menu_about, R.string.menu_about) {
             @Override
             public void execute() {
                 Uri uri = Uri.parse(URL_ABOUT);
@@ -294,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         // Handle item selection
         final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
 
-        if(drawerToggle.onOptionsItemSelected(item)) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
 
@@ -303,19 +278,13 @@ public class MainActivity extends AppCompatActivity {
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_fill));
                 alertDialog.setMessage(getString(R.string.alert_dialog_message_fill));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                fillScreen(currentColor);
-                                updateDrawerHeader();
-                            }
+                        (dialog, which) -> {
+                            dialog.dismiss();
+                            fillScreen(currentColor);
+                            updateDrawerHeader();
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                        (dialog, which) -> dialog.dismiss());
                 alertDialog.show();
 
                 return true;
@@ -327,37 +296,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openFile(String fileName,boolean showToast) {
+    public void openFile(String fileName, boolean showToast) {
         File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File openFile = new File(imageFolder,fileName);
+        File openFile = new File(imageFolder, fileName);
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(openFile));
             int color;
             String value;
 
-            int x,y;
+            int x, y;
 
-            if((value = bufferedReader.readLine()) != null) {
+            if ((value = bufferedReader.readLine()) != null) {
                 x = Integer.valueOf(value);
-            }else{
+            } else {
                 throw new IOException();
             }
 
-            if((value = bufferedReader.readLine()) != null) {
+            if ((value = bufferedReader.readLine()) != null) {
                 y = Integer.valueOf(value);
-            }else{
+            } else {
                 throw new IOException();
             }
 
             LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
 
-            for(int i=0;i<x;i++) {
-                for(int j=0;j<y;j++) {
+            for (int i = 0; i < x; i++) {
+                for (int j = 0; j < y; j++) {
 
-                    if((value = bufferedReader.readLine()) != null) {
+                    if ((value = bufferedReader.readLine()) != null) {
                         color = Integer.valueOf(value);
-                    }else{
+                    } else {
                         throw new IOException();
                     }
 
@@ -366,36 +335,36 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            if(showToast) {
+            if (showToast) {
                 Toast toast = Toast.makeText(this, R.string.file_opened, Toast.LENGTH_SHORT);
                 toast.show();
             }
 
         } catch (FileNotFoundException e) {
-            Log.e("MainActivity.openFile","File not found");
-            if(showToast) {
+            Log.e("MainActivity.openFile", "File not found");
+            if (showToast) {
                 Toast toast = Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_LONG);
                 toast.show();
             }
         } catch (IOException e) {
-            Log.e("MainActivity.openFile","Could not open file");
-            if(showToast) {
+            Log.e("MainActivity.openFile", "Could not open file");
+            if (showToast) {
                 Toast toast = Toast.makeText(this, R.string.could_not_open, Toast.LENGTH_LONG);
                 toast.show();
             }
         }
     }
 
-    public void saveFile(String fileName,boolean showToast) {
-        if(!isExternalStorageWritable()) {
-            Log.e(MainActivity.class.getName(),"External Storage is not writable");
+    public void saveFile(String fileName, boolean showToast) {
+        if (isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(), "External Storage is not writable");
         }
 
         File imageFolder = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File saveFile = new File(imageFolder,fileName);
+        File saveFile = new File(imageFolder, fileName);
 
         try {
-            if(!saveFile.exists()) {
+            if (!saveFile.exists()) {
                 saveFile.createNewFile();
             }
 
@@ -403,8 +372,8 @@ public class MainActivity extends AppCompatActivity {
             fileWriter.append("16\n16\n");
 
             LinearLayout linearLayout = findViewById(R.id.paper_linear_layout);
-            for(int i=0;i<16;i++) {
-                for(int j=0;j<16;j++) {
+            for (int i = 0; i < 16; i++) {
+                for (int j = 0; j < 16; j++) {
                     View v = ((LinearLayout) linearLayout.getChildAt(i)).getChildAt(j);
                     int color = ((ColorDrawable) v.getBackground()).getColor();
                     fileWriter.append(String.valueOf(color));
@@ -414,24 +383,24 @@ public class MainActivity extends AppCompatActivity {
             fileWriter.flush();
             fileWriter.close();
 
-            if(showToast) {
+            if (showToast) {
                 Toast toast = Toast.makeText(this, R.string.toast_saved, Toast.LENGTH_SHORT);
                 toast.show();
             }
         } catch (IOException e) {
-            Log.e("MainActivity.saveFile","File not found");
+            Log.e("MainActivity.saveFile", "File not found");
 
-            if(showToast) {
+            if (showToast) {
                 Toast toast = Toast.makeText(this, R.string.toast_not_saved, Toast.LENGTH_LONG);
                 toast.show();
             }
         }
     }
 
-    public void screenShot(View view,String filename) {
+    public void screenShot(View view, String filename) {
 
-        if(!checkWriteExternalPermission()) {
-            Toast toast = Toast.makeText(this, R.string.no_write_permission,Toast.LENGTH_LONG);
+        if (!checkWriteExternalPermission()) {
+            Toast toast = Toast.makeText(this, R.string.no_write_permission, Toast.LENGTH_LONG);
             toast.show();
 
             return;
@@ -442,11 +411,12 @@ public class MainActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         view.draw(canvas);
 
-        if(!isExternalStorageWritable()) {
-            Log.e(MainActivity.class.getName(),"External Storage is not writable");
+        if (isExternalStorageWritable()) {
+            Log.e(MainActivity.class.getName(), "External storage is not writable");
         }
 
-        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),getString(R.string.app_name));
+        File imageFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), getString(R.string.app_name));
 
         boolean success = true;
 
@@ -454,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
             success = imageFolder.mkdirs();
         }
 
-        if(success) {
+        if (success) {
             File imageFile = new File(imageFolder, filename);
 
             FileOutputStream outputStream;
@@ -477,8 +447,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Log.e(MainActivity.class.getName(), "IOException related to generating bitmap file");
             }
-        }else{
-            Toast toast = Toast.makeText(this, R.string.toast_could_not_create_app_folder,Toast.LENGTH_LONG);
+        } else {
+            Toast toast = Toast.makeText(this, R.string.toast_could_not_create_app_folder, Toast.LENGTH_LONG);
             toast.show();
         }
     }
@@ -493,11 +463,10 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
-        return Environment.MEDIA_MOUNTED.equals(state);
+        return !Environment.MEDIA_MOUNTED.equals(state);
     }
 
-    private boolean checkWriteExternalPermission()
-    {
+    private boolean checkWriteExternalPermission() {
         String permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
         int res = this.checkCallingPermission(permission);
         return (res == PackageManager.PERMISSION_GRANTED);
@@ -515,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initPalette() {
-        colorButtons = new Button[] {
+        colorButtons = new Button[]{
                 findViewById(R.id.color_button_0),
                 findViewById(R.id.color_button_1),
                 findViewById(R.id.color_button_2),
@@ -534,80 +503,74 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.color_button_15)
         };
 
-        colors = new int[] {
-                ContextCompat.getColor(this,R.color.color_0),
-                ContextCompat.getColor(this,R.color.color_1),
-                ContextCompat.getColor(this,R.color.color_2),
-                ContextCompat.getColor(this,R.color.color_3),
-                ContextCompat.getColor(this,R.color.color_4),
-                ContextCompat.getColor(this,R.color.color_5),
-                ContextCompat.getColor(this,R.color.color_6),
-                ContextCompat.getColor(this,R.color.color_7),
-                ContextCompat.getColor(this,R.color.color_8),
-                ContextCompat.getColor(this,R.color.color_9),
-                ContextCompat.getColor(this,R.color.color_10),
-                ContextCompat.getColor(this,R.color.color_11),
-                ContextCompat.getColor(this,R.color.color_12),
-                ContextCompat.getColor(this,R.color.color_13),
-                ContextCompat.getColor(this,R.color.color_14),
-                ContextCompat.getColor(this,R.color.color_15)
+        colors = new int[]{
+                ContextCompat.getColor(this, R.color.color_0),
+                ContextCompat.getColor(this, R.color.color_1),
+                ContextCompat.getColor(this, R.color.color_2),
+                ContextCompat.getColor(this, R.color.color_3),
+                ContextCompat.getColor(this, R.color.color_4),
+                ContextCompat.getColor(this, R.color.color_5),
+                ContextCompat.getColor(this, R.color.color_6),
+                ContextCompat.getColor(this, R.color.color_7),
+                ContextCompat.getColor(this, R.color.color_8),
+                ContextCompat.getColor(this, R.color.color_9),
+                ContextCompat.getColor(this, R.color.color_10),
+                ContextCompat.getColor(this, R.color.color_11),
+                ContextCompat.getColor(this, R.color.color_12),
+                ContextCompat.getColor(this, R.color.color_13),
+                ContextCompat.getColor(this, R.color.color_14),
+                ContextCompat.getColor(this, R.color.color_15)
         };
 
-        for(int i=0;i<colorButtons.length;i++) {
+        for (int i = 0; i < colorButtons.length; i++) {
 
             GradientDrawable cd = (GradientDrawable) colorButtons[i].getBackground();
             cd.setColor(colors[i]);
 
-            colorButtons[i].setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    int n = 0;
+            colorButtons[i].setOnLongClickListener(view -> {
+                int n = 0;
 
-                    for(Button b: colorButtons) {
-                        if( view.getId() == b.getId()) {
-                            break;
-                        }
-
-                        n += 1;
+                for (Button b : colorButtons) {
+                    if (view.getId() == b.getId()) {
+                        break;
                     }
 
-                    Intent i = new Intent(MainActivity.this, ColorSelector.class);
-                    i.putExtra("id",view.getId());
-                    i.putExtra("position",n);
-                    i.putExtra("color",colors[n]);
-
-                    if(colors[n]==currentColor) {
-                        i.putExtra("currentColor",true);
-                    } else {
-                        i.putExtra("currentColor",false);
-                    }
-                    startActivityForResult(i,1);
-
-                    return false;
+                    n += 1;
                 }
+
+                Intent i1 = new Intent(MainActivity.this, ColorSelector.class);
+                i1.putExtra("id", view.getId());
+                i1.putExtra("position", n);
+                i1.putExtra("color", colors[n]);
+
+                if (colors[n] == currentColor) {
+                    i1.putExtra("currentColor", true);
+                } else {
+                    i1.putExtra("currentColor", false);
+                }
+                startActivityForResult(i1, 1);
+
+                return false;
             });
         }
 
         selectColor(colorButtons[0]);
     }
 
-    //Initializes the "pixels" (basically sets OnLongClickListerner on them)
+    //Initializes the "pixels" (basically sets OnLongClickListener on them)
     private void initPixels() {
         LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
-        for(int i=0;i<paper.getChildCount();i++) {
+        for (int i = 0; i < paper.getChildCount(); i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
 
-            for(int j=0;j<l.getChildCount();j++) {
+            for (int j = 0; j < l.getChildCount(); j++) {
                 View pixel = l.getChildAt(j);
 
                 //Sets OnLongCLickListener to be able to select current color based on that pixel's color
-                pixel.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        selectColor(((ColorDrawable) view.getBackground()).getColor());
-                        return false;
-                    }
+                pixel.setOnLongClickListener(view -> {
+                    selectColor(((ColorDrawable) view.getBackground()).getColor());
+                    return false;
                 });
             }
         }
@@ -620,25 +583,25 @@ public class MainActivity extends AppCompatActivity {
         int x;
         int y;
 
-        if(grid) {
+        if (grid) {
             x = 0;
             y = 0;
-        }else{
+        } else {
             x = 1;
             y = 1;
         }
 
         grid = !grid;
 
-        for(int i=0;i<paper.getChildCount();i++) {
+        for (int i = 0; i < paper.getChildCount(); i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
 
-            for(int j=0;j<l.getChildCount();j++) {
+            for (int j = 0; j < l.getChildCount(); j++) {
                 View pixel = l.getChildAt(j);
 
                 ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) pixel.getLayoutParams();
 
-                layoutParams.setMargins(x,y,0,0);
+                layoutParams.setMargins(x, y, 0, 0);
                 pixel.setLayoutParams(layoutParams);
             }
         }
@@ -648,10 +611,10 @@ public class MainActivity extends AppCompatActivity {
     private void fillScreen(int color) {
         LinearLayout paper = findViewById(R.id.paper_linear_layout);
 
-        for(int i=0;i<paper.getChildCount();i++) {
+        for (int i = 0; i < paper.getChildCount(); i++) {
             LinearLayout l = (LinearLayout) paper.getChildAt(i);
 
-            for(int j=0;j<l.getChildCount();j++) {
+            for (int j = 0; j < l.getChildCount(); j++) {
                 View pixel = l.getChildAt(j);
 
                 pixel.setBackgroundColor(color);
@@ -663,8 +626,8 @@ public class MainActivity extends AppCompatActivity {
     public void selectColor(View v) {
         int i = 0;
 
-        for(Button b: colorButtons) {
-            if( v.getId() == b.getId()) {
+        for (Button b : colorButtons) {
+            if (v.getId() == b.getId()) {
                 break;
             }
 
@@ -682,5 +645,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Onclick method that changes the color of a single "pixel"
-    public void changeColor(View v) { v.setBackgroundColor(currentColor); }
+    public void changeColor(View v) {
+        v.setBackgroundColor(currentColor);
+    }
 }

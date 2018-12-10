@@ -4,7 +4,7 @@ public abstract class DrawerMenuItem {
     private int iconId;
     private int stringId;
 
-    DrawerMenuItem(int id,int string) {
+    DrawerMenuItem(int id, int string) {
         iconId = id;
         stringId = string;
     }

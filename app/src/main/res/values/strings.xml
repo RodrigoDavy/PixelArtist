@@ -12,26 +12,30 @@
     <string name="toast_save">Not implemented yet, sorry! Use the screen capture :)</string>
 
     <string name="alert_dialog_title_new">New drawing</string>
-    <string name="alert_dialog_message_new">Creating a new drawing will erase the old one
-        \n\nThis operation cannot be undone!</string>
+    <string name="alert_dialog_message_new">
+        Creating a new drawing will erase the old one.
+        \n\nThis operation cannot be undone!
+    </string>
 
-    <string name="alert_dialog_title_fill">Fill drawable area </string>
-    <string name="alert_dialog_message_fill">This will fill the drawable area with the selected color
-        \n\nThis operation cannot be undone!</string>
+    <string name="alert_dialog_title_fill">Fill drawable area</string>
+    <string name="alert_dialog_message_fill">
+        This will fill the drawable area with the selected color.
+        \n\nThis operation cannot be undone!
+    </string>
 
     <string name="menu_export">Export</string>
-    <string name="toast_saved">File saved!</string>
+    <string name="toast_saved">File saved</string>
     <string name="toast_not_saved">File could not be saved</string>
     <string name="menu_open">Open</string>
     <string name="file_not_found">File not found</string>
-    <string name="could_not_open">Could not open file</string>
+    <string name="could_not_open">Couldn\'t open file</string>
     <string name="file_opened">File opened successfully</string>
     <string name="filename">Filename</string>
     <string name="no_files_found">No files found</string>
-    <string name="toast_could_not_create_app_folder">Could not create app folder</string>
+    <string name="toast_could_not_create_app_folder">Couldn\'t create app folder</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="no_write_permission">Error! The app doesn\'t have write permission</string>
+    <string name="no_write_permission">App doesn\'t have write permission!</string>
 </resources>

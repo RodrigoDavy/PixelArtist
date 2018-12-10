@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +24,7 @@
                 android:text="R"
                 android:textColor="#ff0000"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <SeekBar
                 android:id="@+id/seekBarRed"
@@ -91,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="->"
-                android:textSize="42sp"/>
+                android:textSize="42sp" />
 
             <Button
                 android:id="@+id/new_color"
@@ -105,8 +104,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
+            android:onClick="apply"
             android:text="@string/apply"
-            android:textSize="24sp"
-            android:onClick="apply" />
+            android:textSize="24sp" />
     </LinearLayout>
 </ScrollView>
