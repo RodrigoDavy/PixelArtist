@@ -5,6 +5,9 @@ Built using Android Studio
 
 Special thanks to Marco (the Pineapple) from Spain for helping me with the Spanish translation! :)
 
+[<img src="https://f-droid.org/badge/get-it-on.png"
+     alt="Get it on F-Droid"
+     height="80">](https://f-droid.org/packages/rodrigodavy.com.github.pixelartist/)
 
 ## Features:
 - Color your pixels by pressing them (duh!)
