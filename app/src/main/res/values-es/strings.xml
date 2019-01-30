@@ -32,6 +32,7 @@
     <string name="toast_could_not_create_app_folder">No se pudo crear una carpeta de imágenes</string>
 
     <string name="no_write_permission">¡Error! La aplicación no tiene permiso de escritura</string>
+    <string name="granted_write_permission">La app tiene permiso de escritura ahora</string>
 
     <string name="drawer_open">Abrir panel lateral de navegación</string>
     <string name="drawer_close">Cerrar panel lateral de navegación</string>

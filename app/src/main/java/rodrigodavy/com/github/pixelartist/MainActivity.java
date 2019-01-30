@@ -1,5 +1,6 @@
 package rodrigodavy.com.github.pixelartist;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SETTINGS_GRID = "grid";
     private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
+
+    private static final int MY_REQUEST_WRITE_STORAGE = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -430,11 +434,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void screenShot(View view,String filename) {
 
-        if(!checkWriteExternalPermission()) {
-            Toast toast = Toast.makeText(this, R.string.no_write_permission,Toast.LENGTH_LONG);
-            toast.show();
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_REQUEST_WRITE_STORAGE);
 
             return;
+
         }
 
         Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),
@@ -483,6 +491,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    // can run additional stuff here
+                    Toast.makeText(this, R.string.granted_write_permission, Toast.LENGTH_LONG).show();
+                } else {
+                    // permission denied
+                    Toast.makeText(this, R.string.no_write_permission, Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
     private void openScreenshot(File imageFile) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -494,13 +520,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
         return Environment.MEDIA_MOUNTED.equals(state);
-    }
-
-    private boolean checkWriteExternalPermission()
-    {
-        String permission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        int res = this.checkCallingPermission(permission);
-        return (res == PackageManager.PERMISSION_GRANTED);
     }
 
     private void updateDrawerHeader() {
