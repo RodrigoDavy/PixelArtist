@@ -38,4 +38,5 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string name="no_write_permission">App doesn\'t have write permission!</string>
+    <string name="granted_write_permission">The app now has write permission</string>
 </resources>
