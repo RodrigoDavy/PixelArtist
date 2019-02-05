@@ -485,7 +485,7 @@ public class MainActivity extends AppCompatActivity {
             intent.setDataAndType(uri, "image/*");
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this, getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_something_went_wrong), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -688,7 +688,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //On click method that selects the current color based on the pallete button pressed
+    //On click method that selects the current color based on the palette button pressed
     public void selectColor(View v) {
         int i = 0;
 

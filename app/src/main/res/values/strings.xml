@@ -50,5 +50,5 @@
     <string name="write_permission_granted">Write permission has been granted.</string>
 
     <!-- Error messages -->
-    <string name="something_went_wrong">Something went wrong</string>
+    <string name="error_something_went_wrong">Something went wrong</string>
 </resources>
