@@ -37,5 +37,5 @@
     <string name="drawer_open">Abrir panel lateral de navegación</string>
     <string name="drawer_close">Cerrar panel lateral de navegación</string>
 
-    <string name="something_went_wrong">Algo está mal</string>
+    <string name="something_went_wrong">Algo salió mal</string>
 </resources>
