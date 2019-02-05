@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
         initPalette();
         initPixels();
+        fillScreen(ContextCompat.getColor(MainActivity.this, R.color.color_1));
 
         settings = getPreferences(0);
         grid = settings.getBoolean(SETTINGS_GRID, true);
@@ -403,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void screenShot(View view, String filename) {
 
-        if(ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
 
             ActivityCompat.requestPermissions(this,
