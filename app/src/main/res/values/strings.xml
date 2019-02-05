@@ -39,4 +39,6 @@
 
     <string name="no_write_permission">App doesn\'t have write permission!</string>
     <string name="granted_write_permission">The app now has write permission</string>
+
+    <string name="something_went_wrong">Something went wrong</string>
 </resources>

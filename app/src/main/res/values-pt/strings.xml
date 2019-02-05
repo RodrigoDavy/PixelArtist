@@ -35,4 +35,6 @@
 
     <string name="drawer_open">Abrir gaveta de navegação</string>
     <string name="drawer_close">Fechar gaveta de navegação</string>
+
+    <string name="something_went_wrong">Algo deu errado</string>
 </resources>

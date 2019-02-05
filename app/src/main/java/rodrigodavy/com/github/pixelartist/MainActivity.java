@@ -2,6 +2,8 @@ package rodrigodavy.com.github.pixelartist;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,6 +14,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -465,9 +468,31 @@ public class MainActivity extends AppCompatActivity {
     private void openScreenshot(File imageFile) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        Uri uri = Uri.fromFile(imageFile);
-        intent.setDataAndType(uri, "image/*");
-        startActivity(intent);
+
+        //Uri uri = Uri.fromFile(imageFile);
+        try {
+            Uri uri = convertFileToContentUri(this,imageFile);
+            intent.setDataAndType(uri, "image/*");
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(this,getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    /**
+     * Converts a file to a content uri, by inserting it into the media store.
+     * Requires this permission: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+     */
+    protected static Uri convertFileToContentUri(Context context, File file) throws Exception {
+
+        //Uri localImageUri = Uri.fromFile(localImageFile); // Not suitable as it's not a content Uri
+
+        ContentResolver cr = context.getContentResolver();
+        String imagePath = file.getAbsolutePath();
+        String imageName = null;
+        String imageDescription = null;
+        String uriString = MediaStore.Images.Media.insertImage(cr, imagePath, imageName, imageDescription);
+        return Uri.parse(uriString);
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
