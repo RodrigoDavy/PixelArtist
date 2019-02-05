@@ -4,21 +4,46 @@
     <color name="colorPrimaryDark">#388E3C</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="color_0">#000000</color>
-    <color name="color_1">#ffffff</color>
-    <color name="color_2">#ff0000</color>
-    <color name="color_3">#00ff00</color>
-    <color name="color_4">#ffff00</color>
-    <color name="color_5">#0000ff</color>
-    <color name="color_6">#ff00ff</color>
-    <color name="color_7">#00ffff</color>
-    <color name="color_8">#404040</color>
-    <color name="color_9">#800000</color>
-    <color name="color_10">#008000</color>
-    <color name="color_11">#808000</color>
-    <color name="color_12">#000080</color>
-    <color name="color_13">#800080</color>
-    <color name="color_14">#008080</color>
-    <color name="color_15">#808080</color>
+
+    <!-- COLORS ROUGHLY ACCORDING TO MS PAINT -->
+
+    <!-- MONOCHROME -->
+    <color name="black">#000000</color>      <!-- RGB: 0   | 0   | 0   -->
+    <color name="eclipse">#404040</color>    <!-- RGB: 64  | 64  | 64  -->
+    <color name="grey">#808080</color>       <!-- RGB: 128 | 128 | 128 -->
+    <color name="silver">#c0c0c0</color>     <!-- RGB: 192 | 192 | 192 -->
+    <color name="white">#ffffff</color>      <!-- RGB: 255 | 255 | 255 -->
+
+    <!-- 50% LUMINESCENCE -->
+    <color name="red">#ff0000</color>        <!-- RGB: 255 | 0   | 0   \/\/ HSL: 0   | 240 | 120 -->
+    <color name="vermilion">#ff4000</color>  <!-- RGB: 255 | 64  | 0   \/\/ HSL: 10  | 240 | 120 -->
+    <color name="orange">#ff8000</color>     <!-- RGB: 255 | 128 | 0   \/\/ HSL: 20  | 240 | 120 -->
+    <color name="amber">#ffc000</color>      <!-- RGB: 255 | 192 | 0   \/\/ HSL: 30  | 240 | 120 -->
+    <color name="yellow">#ffff00</color>     <!-- RGB: 255 | 255 | 0   \/\/ HSL: 40  | 240 | 120 -->
+    <color name="lime">#c0ff00</color>       <!-- RGB: 192 | 255 | 0   \/\/ HSL: 50  | 240 | 120 -->
+    <color name="chartreuse">#80ff00</color> <!-- RGB: 128 | 255 | 0   \/\/ HSL: 60  | 240 | 120 -->
+    <color name="harlequin">#40ff00</color>  <!-- RGB: 64  | 255 | 0   \/\/ HSL: 70  | 240 | 120 -->
+    <color name="green">#00ff00</color>      <!-- RGB: 0   | 255 | 0   \/\/ HSL: 80  | 240 | 120 -->
+    <color name="malachite">#00ff40</color>  <!-- RGB: 0   | 255 | 64  \/\/ HSL: 90  | 240 | 120 -->
+    <color name="mint">#00ff80</color>       <!-- RGB: 0   | 255 | 128 \/\/ HSL: 100 | 240 | 120 -->
+    <color name="turquoise">#00ffc0</color>  <!-- RGB: 0   | 255 | 192 \/\/ HSL: 110 | 240 | 120 -->
+    <color name="cyan">#00ffff</color>       <!-- RGB: 0   | 255 | 255 \/\/ HSL: 120 | 240 | 120 -->
+    <color name="sky_blue">#00c0ff</color>   <!-- RGB: 0   | 192 | 255 \/\/ HSL: 130 | 240 | 120 -->
+    <color name="azure">#0080ff</color>      <!-- RGB: 0   | 128 | 255 \/\/ HSL: 140 | 240 | 120 -->
+    <color name="sapphire">#0040ff</color>   <!-- RGB: 0   | 64  | 255 \/\/ HSL: 150 | 240 | 120 -->
+    <color name="blue">#0000ff</color>       <!-- RGB: 0   | 0   | 255 \/\/ HSL: 160 | 240 | 120 -->
+    <color name="indigo">#4000ff</color>     <!-- RGB: 64  | 0   | 255 \/\/ HSL: 170 | 240 | 120 -->
+    <color name="purple">#8000ff</color>     <!-- RGB: 128 | 0   | 255 \/\/ HSL: 180 | 240 | 120 -->
+    <color name="lt_purple">#c000ff</color>  <!-- RGB: 192 | 0   | 255 \/\/ HSL: 190 | 240 | 120 -->
+    <color name="magenta">#ff00ff</color>    <!-- RGB: 255 | 0   | 255 \/\/ HSL: 200 | 240 | 120 -->
+    <color name="fuchsia">#ff00c0</color>    <!-- RGB: 255 | 0   | 192 \/\/ HSL: 210 | 240 | 120 -->
+    <color name="rose">#ff0080</color>       <!-- RGB: 255 | 0   | 128 \/\/ HSL: 220 | 240 | 120 -->
+    <color name="carmine">#ff0040</color>    <!-- RGB: 255 | 0   | 64  \/\/ HSL: 230 | 240 | 120 -->
+
+    <!-- 75% LUMINESCENCE (TO BE IMPLEMENTED WHEN WE ADD SUPPORT FOR A SECOND ROW / MULTIPLE ROWS) -->
+    <!--color name="coral">#ff8080</color-->      <!-- RGB: 255 | 128 | 128 \/\/ HSL: 0   | 240 | 180 -->
+    <!--color name="emerald">#80ff80</color-->    <!-- RGB: 128 | 255 | 128 \/\/ HSL: 80  | 240 | 180 -->
+    <!--color name="slate">#8080ff</color-->      <!-- RGB: 128 | 128 | 255 \/\/ HSL: 160 | 240 | 180 -->
+    <!--color name="pink">#ff80ff</color-->       <!-- RGB: 255 | 128 | 255 \/\/ HSL: 200 | 240 | 180 -->
 
 </resources>

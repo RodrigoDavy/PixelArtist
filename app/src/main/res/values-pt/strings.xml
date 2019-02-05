@@ -1,38 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pixel Artist</string>
-    <string name="color_selector">Seletor de Cor</string>
-    <string name="apply">Aplicar</string>
 
+    <!-- Color selector -->
+    <string name="color_selector">Seletor de Cor</string>
+    <string name="color_selector_apply">Aplicar</string>
+
+    <!-- Menu items -->
     <string name="menu_new">Novo</string>
+    <string name="menu_open">Abrir</string>
+    <string name="menu_save">Salvar</string>
+    <string name="menu_export">Exportar</string>
+    <string name="menu_about">Sobre</string>
     <string name="menu_fill">Preencher com a cor selecionada</string>
     <string name="menu_grid">Mostrar/esconder grade de pixels</string>
-    <string name="menu_save">Salvar</string>
-    <string name="menu_about">Sobre</string>
 
-    <string name="toast_save">Desculpe, não está implementado ainda! Use a captura de tela  :)</string>
-
+    <!-- Alert dialogs -->
     <string name="alert_dialog_title_new">Novo desenho</string>
-    <string name="alert_dialog_message_new">Criar um novo desenho fará com que o desenho atual seja apagado
-        \n\nEsta operação não pode ser desfeita!</string>
-
+    <string name="alert_dialog_message_new">
+        Criar um novo desenho fará com que o desenho atual seja apagado.
+        \n\nEsta operação não pode ser desfeita!
+    </string>
     <string name="alert_dialog_title_fill">Preenchar área desenhável</string>
-    <string name="alert_dialog_message_fill">Isto preencherá toda a área desenhável com a cor selecionada
-        \n\nEsta operação não pode ser desfeita!</string>
+    <string name="alert_dialog_message_fill">
+        Isto preencherá toda a área desenhável com a cor selecionada.
+        \n\nEsta operação não pode ser desfeita!
+    </string>
 
-    <string name="menu_export">Exportar</string>
+    <!-- Toasts -->
+    <string name="toast_save">Desculpe, não está implementado ainda! Use a captura de tela :)</string>
     <string name="toast_saved">Arquivo salvo!</string>
     <string name="toast_not_saved">O arquivo não pôde ser salvo</string>
-    <string name="menu_open">Abrir</string>
-    <string name="file_not_found">Arquivo não encontrado</string>
-    <string name="could_not_open">Arquivo não pôde ser aberto</string>
-    <string name="file_opened">Arquivo aberto com sucesso</string>
-    <string name="filename">Nome do arquivo</string>
-    <string name="no_files_found">Nenhum arquivo encontrado</string>
     <string name="toast_could_not_create_app_folder">A pasta do aplicativo não pôde ser criada</string>
-    <string name="no_write_permission">Erro! O aplicativo não tem permissão de escrita</string>
-    <string name="granted_write_permission">Agora, o app tem permissão de escrita</string>
 
+    <!-- Files -->
+    <string name="file_name">Nome do arquivo</string>
+    <string name="file_opened">Arquivo aberto com sucesso</string>
+    <string name="file_could_not_open">Arquivo não pôde ser aberto</string>
+    <string name="file_not_found">Arquivo não encontrado</string>
+    <string name="file_no_files_found">Nenhum arquivo encontrado</string>
+
+    <!-- Drawer -->
     <string name="drawer_open">Abrir gaveta de navegação</string>
     <string name="drawer_close">Fechar gaveta de navegação</string>
+
+    <!-- Write permission -->
+    <string name="write_permission_unavailable">Erro! O aplicativo não tem permissão de escrita.</string>
+    <string name="write_permission_granted">Agora, o app tem permissão de escrita.</string>
 </resources>
