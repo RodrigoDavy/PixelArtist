@@ -14,7 +14,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,20 +50,30 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String SETTINGS_GRID = "grid";
+    private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
+    private static final int MY_REQUEST_WRITE_STORAGE = 5;
+    private final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
     private int currentColor;
     private Button colorButtons[];
     private int colors[];
-
     private ActionBarDrawerToggle drawerToggle;
-    private final ArrayList<DrawerMenuItem> listMenuItem = new ArrayList<>();
-
     private SharedPreferences settings;
     private boolean grid;
 
-    private static final String SETTINGS_GRID = "grid";
-    private static final String URL_ABOUT = "https://github.com/RodrigoDavy/PixelArtist/blob/master/README.md";
+    /**
+     * Converts a file to a content uri, by inserting it into the media store.
+     * Requires this permission: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+     */
+    protected static Uri convertFileToContentUri(Context context, File file) throws Exception {
 
-    private static final int MY_REQUEST_WRITE_STORAGE = 5;
+        //Uri localImageUri = Uri.fromFile(localImageFile); // Not suitable as it's not a content Uri
+
+        ContentResolver cr = context.getContentResolver();
+        String imagePath = file.getAbsolutePath();
+        String uriString = Media.insertImage(cr, imagePath, null, null);
+        return Uri.parse(uriString);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         initPalette();
         initPixels();
-        fillScreen(ContextCompat.getColor(MainActivity.this, R.color.color_1));
+        fillScreen(ContextCompat.getColor(MainActivity.this, R.color.white));
 
         settings = getPreferences(0);
         grid = settings.getBoolean(SETTINGS_GRID, true);
@@ -156,14 +166,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void execute() {
                 final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                final View v = findViewById(R.id.color_button_1);
+                final View v = findViewById(R.id.color_button_white);
 
                 alertDialog.setTitle(getString(R.string.alert_dialog_title_new));
                 alertDialog.setMessage(getString(R.string.alert_dialog_message_new));
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(android.R.string.ok),
                         (dialog, which) -> {
                             dialog.dismiss();
-                            fillScreen(ContextCompat.getColor(MainActivity.this, R.color.color_1));
+                            fillScreen(ContextCompat.getColor(MainActivity.this, R.color.white));
                             updateDrawerHeader();
                         });
                 alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(android.R.string.cancel),
@@ -199,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                     builder.show();
                 } else {
-                    Toast toast = Toast.makeText(MainActivity.this, R.string.no_files_found, Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(MainActivity.this, R.string.file_no_files_found, Toast.LENGTH_LONG);
                     toast.show();
                 }
             }
@@ -357,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e("MainActivity.openFile", "Could not open file");
             if (showToast) {
-                Toast toast = Toast.makeText(this, R.string.could_not_open, Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(this, R.string.file_could_not_open, Toast.LENGTH_LONG);
                 toast.show();
             }
         }
@@ -471,28 +481,12 @@ public class MainActivity extends AppCompatActivity {
 
         //Uri uri = Uri.fromFile(imageFile);
         try {
-            Uri uri = convertFileToContentUri(this,imageFile);
+            Uri uri = convertFileToContentUri(this, imageFile);
             intent.setDataAndType(uri, "image/*");
             startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(this,getString(R.string.something_went_wrong), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_something_went_wrong), Toast.LENGTH_LONG).show();
         }
-    }
-
-    /**
-     * Converts a file to a content uri, by inserting it into the media store.
-     * Requires this permission: <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-     */
-    protected static Uri convertFileToContentUri(Context context, File file) throws Exception {
-
-        //Uri localImageUri = Uri.fromFile(localImageFile); // Not suitable as it's not a content Uri
-
-        ContentResolver cr = context.getContentResolver();
-        String imagePath = file.getAbsolutePath();
-        String imageName = null;
-        String imageDescription = null;
-        String uriString = MediaStore.Images.Media.insertImage(cr, imagePath, imageName, imageDescription);
-        return Uri.parse(uriString);
     }
 
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -502,10 +496,10 @@ public class MainActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     // can run additional stuff here
-                    Toast.makeText(this, R.string.granted_write_permission, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.write_permission_granted, Toast.LENGTH_LONG).show();
                 } else {
                     // permission denied
-                    Toast.makeText(this, R.string.no_write_permission, Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.write_permission_unavailable, Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -529,41 +523,69 @@ public class MainActivity extends AppCompatActivity {
 
     private void initPalette() {
         colorButtons = new Button[]{
-                findViewById(R.id.color_button_0),
-                findViewById(R.id.color_button_1),
-                findViewById(R.id.color_button_2),
-                findViewById(R.id.color_button_3),
-                findViewById(R.id.color_button_4),
-                findViewById(R.id.color_button_5),
-                findViewById(R.id.color_button_6),
-                findViewById(R.id.color_button_7),
-                findViewById(R.id.color_button_8),
-                findViewById(R.id.color_button_9),
-                findViewById(R.id.color_button_10),
-                findViewById(R.id.color_button_11),
-                findViewById(R.id.color_button_12),
-                findViewById(R.id.color_button_13),
-                findViewById(R.id.color_button_14),
-                findViewById(R.id.color_button_15)
+                findViewById(R.id.color_button_black),
+                findViewById(R.id.color_button_eclipse),
+                findViewById(R.id.color_button_grey),
+                findViewById(R.id.color_button_silver),
+                findViewById(R.id.color_button_white),
+
+                findViewById(R.id.color_button_red),
+                findViewById(R.id.color_button_vermilion),
+                findViewById(R.id.color_button_orange),
+                findViewById(R.id.color_button_amber),
+                findViewById(R.id.color_button_yellow),
+                findViewById(R.id.color_button_lime),
+                findViewById(R.id.color_button_chartreuse),
+                findViewById(R.id.color_button_harlequin),
+                findViewById(R.id.color_button_green),
+                findViewById(R.id.color_button_malachite),
+                findViewById(R.id.color_button_mint),
+                findViewById(R.id.color_button_turquoise),
+                findViewById(R.id.color_button_cyan),
+                findViewById(R.id.color_button_sky_blue),
+                findViewById(R.id.color_button_azure),
+                findViewById(R.id.color_button_sapphire),
+                findViewById(R.id.color_button_blue),
+                findViewById(R.id.color_button_indigo),
+                findViewById(R.id.color_button_purple),
+                findViewById(R.id.color_button_lt_purple),
+                findViewById(R.id.color_button_magenta),
+                findViewById(R.id.color_button_fuchsia),
+                findViewById(R.id.color_button_rose),
+                findViewById(R.id.color_button_carmine)
         };
 
         colors = new int[]{
-                ContextCompat.getColor(this, R.color.color_0),
-                ContextCompat.getColor(this, R.color.color_1),
-                ContextCompat.getColor(this, R.color.color_2),
-                ContextCompat.getColor(this, R.color.color_3),
-                ContextCompat.getColor(this, R.color.color_4),
-                ContextCompat.getColor(this, R.color.color_5),
-                ContextCompat.getColor(this, R.color.color_6),
-                ContextCompat.getColor(this, R.color.color_7),
-                ContextCompat.getColor(this, R.color.color_8),
-                ContextCompat.getColor(this, R.color.color_9),
-                ContextCompat.getColor(this, R.color.color_10),
-                ContextCompat.getColor(this, R.color.color_11),
-                ContextCompat.getColor(this, R.color.color_12),
-                ContextCompat.getColor(this, R.color.color_13),
-                ContextCompat.getColor(this, R.color.color_14),
-                ContextCompat.getColor(this, R.color.color_15)
+                ContextCompat.getColor(this, R.color.black),
+                ContextCompat.getColor(this, R.color.eclipse),
+                ContextCompat.getColor(this, R.color.grey),
+                ContextCompat.getColor(this, R.color.silver),
+                ContextCompat.getColor(this, R.color.white),
+
+                ContextCompat.getColor(this, R.color.red),
+                ContextCompat.getColor(this, R.color.vermilion),
+                ContextCompat.getColor(this, R.color.orange),
+                ContextCompat.getColor(this, R.color.amber),
+                ContextCompat.getColor(this, R.color.yellow),
+                ContextCompat.getColor(this, R.color.lime),
+                ContextCompat.getColor(this, R.color.chartreuse),
+                ContextCompat.getColor(this, R.color.harlequin),
+                ContextCompat.getColor(this, R.color.green),
+                ContextCompat.getColor(this, R.color.malachite),
+                ContextCompat.getColor(this, R.color.mint),
+                ContextCompat.getColor(this, R.color.turquoise),
+                ContextCompat.getColor(this, R.color.cyan),
+                ContextCompat.getColor(this, R.color.sky_blue),
+                ContextCompat.getColor(this, R.color.azure),
+                ContextCompat.getColor(this, R.color.sapphire),
+                ContextCompat.getColor(this, R.color.blue),
+                ContextCompat.getColor(this, R.color.indigo),
+                ContextCompat.getColor(this, R.color.purple),
+                ContextCompat.getColor(this, R.color.lt_purple),
+                ContextCompat.getColor(this, R.color.magenta),
+                ContextCompat.getColor(this, R.color.fuchsia),
+                ContextCompat.getColor(this, R.color.rose),
+                ContextCompat.getColor(this, R.color.carmine)
         };
 
         for (int i = 0; i < colorButtons.length; i++) {
@@ -666,7 +688,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //On click method that selects the current color based on the pallete button pressed
+    //On click method that selects the current color based on the palette button pressed
     public void selectColor(View v) {
         int i = 0;
 

@@ -1,41 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pixel Artist</string>
-    <string name="color_selector">Selección de Color</string>
-    <string name="apply">Aplicar</string>
 
+    <!-- Color selector -->
+    <string name="color_selector">Selección de Color</string>
+    <string name="color_selector_apply">Aplicar</string>
+
+    <!-- Menu items -->
     <string name="menu_new">Nuevo</string>
+    <string name="menu_open">Abrir</string>
+    <string name="menu_save">Guardar</string>
+    <string name="menu_export">Exportar</string>
+    <string name="menu_about">Acerca de</string>
     <string name="menu_fill">Rellenar la pantalla con el color seleccionado</string>
     <string name="menu_grid">Mostrar/esconder cuadrícula</string>
-    <string name="menu_save">Guardar</string>
-    <string name="menu_about">Acerca de</string>
 
-    <string name="toast_save">¡Lo sentimos, aún no está disponible! Haz una captura de pantalla :)</string>
-
+    <!-- Alert dialogs -->
     <string name="alert_dialog_title_new">Nuevo dibujo</string>
-    <string name="alert_dialog_message_new">Si creas un dibujo nuevo, se eliminará el antiguo
-        \n\n¡Esto no se puede deshacer!</string>
-
+    <string name="alert_dialog_message_new">
+        Si creas un dibujo nuevo, se eliminará el antiguo.
+        \n\n¡Esto no se puede deshacer!
+    </string>
     <string name="alert_dialog_title_fill">Rellenar área dibujable</string>
-    <string name="alert_dialog_message_fill">Esto rellenará el área dibujable con el color seleccionado
-        \n\n¡Esto no se puede deshacer!</string>
+    <string name="alert_dialog_message_fill">
+        Esto rellenará el área dibujable con el color seleccionado.
+        \n\n¡Esto no se puede deshacer!
+    </string>
 
-    <string name="menu_export">Exportar</string>
+    <!-- Toasts -->
+    <string name="toast_save">¡Lo sentimos, aún no está disponible! Haz una captura de pantalla :)</string>
     <string name="toast_saved">¡Archivo guardado!</string>
     <string name="toast_not_saved">El archivo no se pudo guardar</string>
-    <string name="menu_open">Abrir</string>
-    <string name="file_not_found">Archivo no encontrado</string>
-    <string name="could_not_open">El archivo no se pudo abrir</string>
-    <string name="file_opened">Archivo abierto con éxito</string>
-    <string name="filename">Nombre del archivo</string>
-    <string name="no_files_found">No se encontraron archivos</string>
     <string name="toast_could_not_create_app_folder">No se pudo crear una carpeta de imágenes</string>
 
-    <string name="no_write_permission">¡Error! La aplicación no tiene permiso de escritura</string>
-    <string name="granted_write_permission">Ahora, la app tiene permiso de escritura</string>
+    <!-- Files -->
+    <string name="file_name">Nombre del archivo</string>
+    <string name="file_opened">Archivo abierto con éxito</string>
+    <string name="file_could_not_open">El archivo no se pudo abrir</string>
+    <string name="file_not_found">Archivo no encontrado</string>
+    <string name="file_no_files_found">No se encontraron archivos</string>
 
+    <!-- Drawer -->
     <string name="drawer_open">Abrir panel lateral de navegación</string>
     <string name="drawer_close">Cerrar panel lateral de navegación</string>
 
-    <string name="something_went_wrong">Algo salió mal</string>
+    <!-- Write permission -->
+    <string name="write_permission_unavailable">¡Error! La aplicación no tiene permiso de escritura.</string>
+    <string name="write_permission_granted">Ahora, la app tiene permiso de escritura.</string>
+
+    <!-- Error messages -->
+    <string name="error_something_went_wrong">Algo salió mal</string>
 </resources>

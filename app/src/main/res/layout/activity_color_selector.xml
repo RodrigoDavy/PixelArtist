@@ -105,7 +105,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:onClick="apply"
-            android:text="@string/apply"
+            android:text="@string/color_selector_apply"
             android:textSize="24sp" />
     </LinearLayout>
 </ScrollView>
