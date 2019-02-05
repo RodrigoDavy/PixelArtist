@@ -46,4 +46,7 @@
     <!-- Write permission -->
     <string name="write_permission_unavailable">¡Error! La aplicación no tiene permiso de escritura.</string>
     <string name="write_permission_granted">Ahora, la app tiene permiso de escritura.</string>
+
+    <!-- Error messages -->
+    <string name="something_went_wrong">Algo salió mal</string>
 </resources>

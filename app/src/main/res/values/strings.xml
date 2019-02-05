@@ -48,4 +48,7 @@
     <!-- Write permission -->
     <string name="write_permission_unavailable">App doesn\'t have write permission!</string>
     <string name="write_permission_granted">Write permission has been granted.</string>
+
+    <!-- Error messages -->
+    <string name="something_went_wrong">Something went wrong</string>
 </resources>
